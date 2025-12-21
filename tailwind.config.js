@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+    darkMode: ["class"],
     content: [
         "./index.html",
         "./src/**/*.{js,ts,jsx,tsx}",
@@ -7,39 +8,30 @@ export default {
     theme: {
         extend: {
             colors: {
-                // Modern Vibrant Palette
-                primary: {
-                    50: '#ECFDF5',   // Backgrounds
-                    100: '#D1FAE5',
-                    200: '#A7F3D0',
-                    300: '#6EE7B7',
-                    400: '#34D399',
-                    500: '#10B981',  // Main Brand
-                    600: '#059669',  // Hover
-                    700: '#047857',
-                    800: '#065F46',
-                    900: '#064E3B',
-                },
-                accent: {
-                    500: '#F59E0B', // Amber for alerts/highlights
-                    600: '#D97706',
-                },
-                dark: {
-                    900: '#111827',
-                    800: '#1F2937',
+                // Farmer-First Palette (High Contrast, Earthy)
+                farmer: {
+                    primary: '#166534', // Deep Green (Trust)
+                    secondary: '#15803d', // Lighter Green
+                    accent: '#EA580C', // Harvest Orange (Action)
+                    background: '#FEFCE8', // Warm Beige (Easy on eyes)
+                    surface: '#FFFFFF', // Clean White
+                    text: '#1e293b', // Slate 800 (Readable Black)
+                    muted: '#64748b', // Slate 500
+                    border: '#e2e8f0', // Slate 200
                 }
             },
             fontFamily: {
-                sans: ['Inter', 'system-ui', 'sans-serif'],
+                sans: ['Inter', 'sans-serif'], // Maximum Legibility
             },
             boxShadow: {
-                'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.15)',
-                'glow': '0 0 15px rgba(16, 185, 129, 0.5)',
+                'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                'floating': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
             },
-            backdropBlur: {
-                'xs': '2px',
+            borderRadius: {
+                'lg': '0.75rem', // Soft, friendly corners
+                'xl': '1rem',
             }
         },
     },
-    plugins: [],
+    plugins: [require("tailwindcss-animate")],
 }

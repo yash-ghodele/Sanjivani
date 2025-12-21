@@ -1,45 +1,27 @@
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
+
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import FarmerLayout from './layouts/FarmerLayout'
 import Landing from './pages/Landing'
 import Dashboard from './pages/Dashboard'
-import Camera from './pages/Camera'
-import History from './pages/History'
+import Scan from './pages/Scan'
 import Auth from './pages/Auth'
-import MobileNav from './components/layout/MobileNav'
-import PageTransition from './components/layout/PageTransition'
-import ChatAssistant from './components/ui/ChatAssistant'
-import { LanguageProvider } from './context/LanguageContext'
 
-function AppContent() {
-    const location = useLocation()
-    // Show nav only on main app pages
-    const showNav = !['/', '/auth'].includes(location.pathname)
+const queryClient = new QueryClient()
 
+export default function App() {
     return (
-        <div className="min-h-screen pb-24">
-            <PageTransition>
-                <Routes location={location}>
-                    <Route path="/" element={<Landing />} />
-                    <Route path="/auth" element={<Auth />} />
-                    <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/camera" element={<Camera />} />
-                    <Route path="/history" element={<History />} />
-                </Routes>
-            </PageTransition>
-
-            {showNav && <MobileNav />}
-            <ChatAssistant />
-        </div>
-    )
-}
-
-function App() {
-    return (
-        <LanguageProvider>
+        <QueryClientProvider client={queryClient}>
             <BrowserRouter>
-                <AppContent />
+                <Routes>
+                    <Route path="/" element={<FarmerLayout />}>
+                        <Route index element={<Landing />} />
+                        <Route path="auth" element={<Auth />} />
+                        <Route path="dashboard" element={<Dashboard />} />
+                        <Route path="scan" element={<Scan />} />
+                    </Route>
+                </Routes>
             </BrowserRouter>
-        </LanguageProvider>
+        </QueryClientProvider>
     )
 }
-
-export default App
