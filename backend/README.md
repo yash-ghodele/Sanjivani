@@ -1,63 +1,56 @@
-# SANJIVANI Backend
+# SANJIVANI Backend 🐍
 
-## Setup
+The AI brain of the CropGuard platform. Built with **FastAPI** and **TensorFlow**.
 
-1. Create virtual environment:
+## ⚙️ Setup
+
+### 1. Environment
 ```bash
+cd backend
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
-
-2. Install dependencies:
-```bash
+venv\Scripts\activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-3. Run the server:
+### 2. Database (Firebase)
+To enable History limits:
+1.  Go to Firebase Console -> Project Settings -> Service Accounts.
+2.  Generate Private Key.
+3.  Save as `backend/serviceAccountKey.json`.
+4.  *Without this, the app runs in Mock Mode (Data not saved).*
+
+### 3. Run Server
 ```bash
 python main.py
+# Running on http://localhost:8000
 ```
 
-Or use uvicorn directly:
+---
+
+## 🧠 AI Model Training
+The model detects 38 classes of plant diseases.
+
+### Step 1: Get Data
+Run the automated downloader:
 ```bash
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
+python download_dataset.py
 ```
+*Retrieves ~2.7GB from Kaggle automatically.*
 
-## API Endpoints
-
-### POST `/predict`
-Upload crop image for disease detection
-
-**Request:**
-- Content-Type: multipart/form-data
-- Body: `file` (image file)
-
-**Response:**
-```json
-{
-  "disease": "Early Blight",
-  "confidence": 94.5,
-  "severity": "Moderate",
-  "treatment": "Apply Chlorothalonil fungicide...",
-  "prevention": "Rotate crops, avoid overhead irrigation..."
-}
+### Step 2: Train
+```bash
+python train_model.py
 ```
+*   Trains MobileNetV2 for 20 epochs.
+*   Saves best model to `models/plant_disease_model.h5`.
+*   Auto-switches API from Mock -> Real Mode found.
 
-### GET `/health`
-Check API health status
+---
 
-## Model Setup
+## 📡 API Endpoints
 
-Place your trained model file at:
-```
-backend/models/plant_disease_model.h5
-```
-
-If no model is found, the API will use mock predictions for testing.
-
-## Training Your Own Model (Optional)
-
-Use the Kaggle Plant Disease Dataset:
-https://www.kaggle.com/datasets/vipoooool/new-plant-diseases-dataset
-
-Example training script coming soon in `train_model.py`
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `POST` | `/predict` | Upload image, returns disease + confidence + treatment |
+| `GET` | `/history` | Fetch recent scans from Firestore |
+| `GET` | `/health` | Check API status & Model loading state |

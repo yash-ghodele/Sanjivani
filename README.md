@@ -1,106 +1,63 @@
 # CropGuard/SANJIVANI
 
-AI-powered crop disease detection platform for farmers.
+🚀 **Production-Ready AI Crop Disease Detection Platform**
+Built for Smart India Hackathon 2024.
 
-## Project Structure
+---
 
-```
-CropGuard/
-├── frontend/          # React + TypeScript
-│   ├── src/
-│   ├── public/
-│   └── package.json
-├── backend/           # Python FastAPI
-│   ├── main.py
-│   ├── train_model.py
-│   ├── requirements.txt
-│   └── models/
-└── dataset/           # Training data (download separately)
-```
+## 🌟 Features
+*   **Real-Time Detection**: Instant diagnosis via Webcam or File Upload using a custom CNN.
+*   **Premium UI**: Glassmorphism design (Emerald/Teal theme) with framer-motion animations.
+*   **Mobile-First**: Fully responsive with bottom navigation and touch-friendly controls.
+*   **Data Persistence**: Firebase connection for saving scan history indefinitely.
+*   **Farmer Dashboard**: Weather integration, health scores, and recent activity.
+*   **Multilingual**: Support for English, Hindi, and Marathi.
 
-## Quick Start
+---
 
-### 1. Frontend (React)
+## 🛠️ Tech Stack
+*   **Frontend**: React 18, TypeScript, Vite, Tailwind CSS
+*   **Backend**: Python FastAPI, Uvicorn, TensorFlow, OpenCV
+*   **AI Model**: MobileNetV2 (Transfer Learning) on 38 Disease Classes
+*   **Database**: Google Firebase Firestore
+*   **infrastructure**: Docker & Docker Compose
 
+---
+
+## 🚀 Quick Start
+
+### 1. Frontend
 ```bash
-# Install dependencies
 npm install
-
-# Run dev server
 npm run dev
 # Open http://localhost:5173
 ```
 
-### 2. Backend (Python API)
-
+### 2. Backend
 ```bash
 cd backend
-
-# Create virtual environment
 python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-
-# Install dependencies
+venv\Scripts\activate  # Windows
 pip install -r requirements.txt
-
-# Run API server
 python main.py
 # API runs at http://localhost:8000
 ```
 
-### 3. Train Model (Optional)
+### 3. AI Model Setup
+The repo comes with a `download_dataset.py` script.
+1.  **Download**: `python download_dataset.py` (or manual download)
+2.  **Train**: `python train_model.py` (Takes ~1 hour)
 
+---
+
+## ☁️ Deployment
+This project is container-ready. 
 ```bash
-# Download dataset from Kaggle
-# https://www.kaggle.com/datasets/vipoooool/new-plant-diseases-dataset
-
-# Train model
-python train_model.py
+docker-compose up --build
 ```
 
-## Features
+## 📂 Repository
+[https://github.com/yash-ghodele/Sanjivani-MVP](https://github.com/yash-ghodele/Sanjivani-MVP)
 
-✅ Real-time disease detection via webcam
-✅ Image upload support
-✅ AI-powered CNN predictions  
-✅ Treatment recommendations
-✅ Scan history tracking
-✅ Mobile-responsive design
-✅ Farmer-friendly UI
-
-## Tech Stack
-
-**Frontend:**
-- React 18 + TypeScript
-- Vite
-- Tailwind CSS
-- React Router
-- Lucide Icons
-
-**Backend:**
-- FastAPI
-- TensorFlow/Keras
-- OpenCV
-- Python 3.10+
-
-**ML Model:**
-- MobileNetV2 (transfer learning)
-- Kaggle Plant Disease Dataset
-- 38 disease classes
-
-## API Endpoints
-
-- `POST /predict` - Upload image for disease detection
-- `GET /health` - API health check
-
-## Development
-
-See individual READMEs:
-- Backend: `backend/README.md`
-- Training: `backend/TRAINING.md`
-
-## License
-
-MIT
-
-## Team SANJIVANI - SIH 2024
+---
+© 2024 Team SANJIVANI
