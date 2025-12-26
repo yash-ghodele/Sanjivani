@@ -1,0 +1,266 @@
+{
+    "version": "2.0.0",
+    "last_updated": "2025-12-26",
+    "description": "Versioned disease knowledge database for SANJIVANI 2.0",
+    "diseases": {
+        "Early_Blight": {
+            "scientific_name": "Alternaria solani",
+            "severity": "Moderate",
+            "crops_affected": [
+                "Tomato",
+                "Potato"
+            ],
+            "symptoms": [
+                "Dark brown spots with concentric rings on older leaves",
+                "Yellowing around spots",
+                "Premature leaf drop",
+                "Reduced yield"
+            ],
+            "recommended_actions": {
+                "immediate": [
+                    "Remove and destroy infected leaves immediately",
+                    "Apply copper-based fungicide (Copper oxychloride 50% WP @ 3g/L)",
+                    "Isolate affected plants if possible"
+                ],
+                "short_term": [
+                    "Apply Mancozeb 75% WP @ 2.5g/L every 7-10 days",
+                    "Ensure proper plant spacing for air circulation",
+                    "Water at soil level, avoid wetting foliage"
+                ],
+                "preventive": [
+                    "Crop rotation with non-solanaceous crops",
+                    "Use disease-resistant varieties",
+                    "Remove crop debris after harvest",
+                    "Apply balanced fertilizer to strengthen plants"
+                ]
+            },
+            "explanation": "Fungal disease that typically starts on lower, older leaves and progresses upward. Thrives in warm, humid conditions.",
+            "economic_impact": "Can reduce yields by 20-30% if left untreated",
+            "multilingual": {
+                "hi": {
+                    "name": "अर्ली ब्लाइट",
+                    "symptoms": "पुरानी पत्तियों पर गहरे भूरे रंग के धब्बे"
+                },
+                "mr": {
+                    "name": "अर्ली ब्लाइट",
+                    "symptoms": "जुन्या पानांवर गडद तपकिरी ठिपके"
+                }
+            }
+        },
+        "Late_Blight": {
+            "scientific_name": "Phytophthora infestans",
+            "severity": "Critical",
+            "crops_affected": [
+                "Tomato",
+                "Potato"
+            ],
+            "symptoms": [
+                "Water-soaked lesions on leaves and stems",
+                "White fungal growth on leaf undersides",
+                "Rapid plant death within days",
+                "Fruit/tuber rot"
+            ],
+            "recommended_actions": {
+                "immediate": [
+                    "Apply Metalaxyl + Mancozeb @ 2.5g/L within 24 hours",
+                    "Destroy severely infected plants",
+                    "Store-bought fungicide application urgent",
+                    "Contact agricultural extension officer"
+                ],
+                "short_term": [
+                    "Spray Cymoxanil 8% + Mancozeb 64% WP every 5 days",
+                    "Improve drainage to reduce moisture",
+                    "Remove all infected plant material",
+                    "Monitor weather - disease spreads in cool, wet conditions"
+                ],
+                "preventive": [
+                    "Plant resistant varieties (e.g., Kashi Anmol)",
+                    "Avoid overhead irrigation",
+                    "Hill up potatoes to protect tubers",
+                    "Use disease-free seed/transplants"
+                ]
+            },
+            "explanation": "Highly aggressive fungal disease. Caused the Irish Potato Famine. Can destroy entire crops in 2-3 weeks during favorable conditions.",
+            "economic_impact": "Can cause 100% crop loss if not controlled immediately",
+            "multilingual": {
+                "hi": {
+                    "name": "लेट ब्लाइट",
+                    "symptoms": "पत्तियों और तनों पर पानी जैसे धब्बे"
+                },
+                "mr": {
+                    "name": "लेट ब्लाइट",
+                    "symptoms": "पाने आणि खोडांवर पाण्यासारखे ठिपके"
+                }
+            }
+        },
+        "Leaf_Mold": {
+            "scientific_name": "Passalora fulva",
+            "severity": "Moderate",
+            "crops_affected": [
+                "Tomato"
+            ],
+            "symptoms": [
+                "Pale green to yellowish spots on upper leaf surface",
+                "Olive green to brown mold on leaf underside",
+                "Leaves curl and die",
+                "Reduced photosynthesis"
+            ],
+            "recommended_actions": {
+                "immediate": [
+                    "Remove affected leaves",
+                    "Apply copper fungicide spray",
+                    "Increase ventilation in greenhouse/field"
+                ],
+                "short_term": [
+                    "Apply Chlorothalonil 75% WP @ 2g/L weekly",
+                    "Reduce humidity by improving airflow",
+                    "Prune lower leaves for better air circulation"
+                ],
+                "preventive": [
+                    "Plant resistant varieties",
+                    "Maintain relative humidity below 85%",
+                    "Avoid crowding plants",
+                    "Disinfect greenhouse structures"
+                ]
+            },
+            "explanation": "Fungal disease common in greenhouses and humid conditions. Does not affect fruit quality directly but reduces plant vigor.",
+            "economic_impact": "10-25% yield reduction in severe cases",
+            "multilingual": {
+                "hi": {
+                    "name": "लीफ मोल्ड",
+                    "symptoms": "पत्तियों की ऊपरी सतह पर हल्के हरे से पीले धब्बे"
+                },
+                "mr": {
+                    "name": "लीफ मोल्ड",
+                    "symptoms": "पानांच्या वरच्या पृष्ठभागावर फिकट हिरवे ठिपके"
+                }
+            }
+        },
+        "Bacterial_Blight": {
+            "scientific_name": "Xanthomonas oryzae pv. oryzae",
+            "severity": "High",
+            "crops_affected": [
+                "Rice"
+            ],
+            "symptoms": [
+                "Water-soaked lesions on leaf tips and edges",
+                "Lesions turn yellow then white",
+                "Systemic infection in severe cases",
+                "Reduced grain filling"
+            ],
+            "recommended_actions": {
+                "immediate": [
+                    "Apply Copper hydroxide @ 2g/L",
+                    "Drain field temporarily if flooded",
+                    "Remove severely infected plants"
+                ],
+                "short_term": [
+                    "Spray Streptocycline 15% + Copper oxychloride 50% WP",
+                    "Balanced fertilizer application (avoid excess nitrogen)",
+                    "Monitor insect pests (vectors of disease)"
+                ],
+                "preventive": [
+                    "Use resistant varieties (e.g., Swarna Sub1)",
+                    "Treat seeds with hot water (52°C for 30 min)",
+                    "Avoid deep flooding",
+                    "Maintain balanced nitrogen levels"
+                ]
+            },
+            "explanation": "Bacterial disease spread by water, wind, and insects. Most damaging during monsoon season.",
+            "economic_impact": "10-50% yield loss depending on crop stage and weather",
+            "multilingual": {
+                "hi": {
+                    "name": "बैक्टीरियल ब्लाइट",
+                    "symptoms": "पत्तियों के किनारों पर पानी जैसे धब्बे"
+                },
+                "mr": {
+                    "name": "बॅक्टेरियल ब्लाइट",
+                    "symptoms": "पानांच्या कडांवर पाण्यासारखे ठिपके"
+                }
+            }
+        },
+        "Brown_Spot": {
+            "scientific_name": "Bipolaris oryzae",
+            "severity": "Moderate",
+            "crops_affected": [
+                "Rice"
+            ],
+            "symptoms": [
+                "Circular or oval brown spots on leaves",
+                "Spots have gray center",
+                "Lesions can cover entire leaf",
+                "Reduced grain quality"
+            ],
+            "recommended_actions": {
+                "immediate": [
+                    "Apply Mancozeb 75% WP @ 2g/L",
+                    "Remove infected leaves if localized",
+                    "Improve field drainage"
+                ],
+                "short_term": [
+                    "Spray Carbendazim 50% WP @ 1g/L every 10 days",
+                    "Apply potassium fertilizer to strengthen plants",
+                    "Monitor for spread"
+                ],
+                "preventive": [
+                    "Use healthy, certified seeds",
+                    "Treat seeds with Carbendazim before sowing",
+                    "Maintain proper plant nutrition",
+                    "Avoid water stress"
+                ]
+            },
+            "explanation": "Fungal disease associated with nutrient deficiency and poor soil conditions. Common in fields with unbalanced fertilization.",
+            "economic_impact": "5-20% yield reduction, affects grain quality",
+            "multilingual": {
+                "hi": {
+                    "name": "ब्राउन स्पॉट",
+                    "symptoms": "पत्तियों पर गोलाकार भूरे धब्बे"
+                },
+                "mr": {
+                    "name": "तपकिरी ठिपके",
+                    "symptoms": "पानांवर गोल तपकिरी ठिपके"
+                }
+            }
+        },
+        "Healthy": {
+            "severity": "None",
+            "crops_affected": [
+                "Tomato",
+                "Potato",
+                "Rice"
+            ],
+            "symptoms": [
+                "Vibrant green leaves",
+                "No visible lesions or spots",
+                "Normal growth pattern",
+                "Good vigor"
+            ],
+            "recommended_actions": {
+                "immediate": [],
+                "short_term": [
+                    "Continue current management practices",
+                    "Monitor regularly for early disease signs",
+                    "Maintain proper nutrition"
+                ],
+                "preventive": [
+                    "Regular scouting for pests and diseases",
+                    "Practice crop rotation",
+                    "Use balanced fertilization",
+                    "Maintain field hygiene"
+                ]
+            },
+            "explanation": "Plant shows no signs of disease. Continue good agricultural practices.",
+            "economic_impact": "None - maintain health to maximize yield",
+            "multilingual": {
+                "hi": {
+                    "name": "स्वस्थ",
+                    "symptoms": "कोई लक्षण नहीं, पौधा स्वस्थ है"
+                },
+                "mr": {
+                    "name": "निरोगी",
+                    "symptoms": "कोणतीही लक्षणे नाहीत, रोप निरोगी आहे"
+                }
+            }
+        }
+    }
+}

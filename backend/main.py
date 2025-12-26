@@ -1,149 +1,142 @@
-from fastapi import FastAPI, File, UploadFile, HTTPException
+"""
+SANJIVANI 2.0 - Main FastAPI Application
+Production-grade architecture with separated concerns
+"""
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-import cv2
-import numpy as np
-from PIL import Image
-import io
-from typing import Optional
-import tensorflow as tf
-from pathlib import Path
 
-from database import init_db, save_scan
+# Import API v2 routers
+from api.v2 import predict_router, metrics_router
 
-# Global model variable
-model = None
-
-def load_model():
-    global model
-    try:
-        model = tf.keras.models.load_model("backend/models/plant_disease_model.h5")
-        print("Model loaded successfully")
-    except:
-        print("Model not found, using mock")
-        model = None
-
-def preprocess_image(image_bytes):
-    img = Image.open(io.BytesIO(image_bytes))
-    img = img.resize((224, 224))
-    img_array = tf.keras.preprocessing.image.img_to_array(img)
-    img_array = np.expand_dims(img_array, axis=0)
-    return img_array / 255.0
-
-def predict_disease(img_array):
-    if model is None:
-        return "early_blight", 0.95 # Mock
-    
-    predictions = model.predict(img_array)
-    class_idx = np.argmax(predictions[0])
-    confidence = float(predictions[0][class_idx])
-    
-    # Load class names
-    try:
-        with open("backend/models/class_names.txt", "r") as f:
-            class_names = f.read().splitlines()
-        disease = class_names[class_idx]
-    except:
-        disease = "early_blight"
-        
-    return disease, confidence
+# Import initialization functions
+from database import init_db
+from ai.inference_engine import get_inference_engine
+from knowledge.knowledge_engine import get_knowledge_engine
 
 
-app = FastAPI(title="SANJIVANI API", version="1.0.0")
+# Initialize FastAPI app
+app = FastAPI(
+    title="SANJIVANI API",
+    version="2.0.0",
+    description="AI-powered crop disease detection platform with production-grade architecture",
+    docs_url="/api/docs",
+    redoc_url="/api/redoc"
+)
 
-# CORS middleware for React frontend
+# CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:3000", "http://localhost:5174"],
+    allow_origins=[
+        "http://localhost:5173",
+        "http://localhost:3000",
+        "http://localhost:5174",
+        "https://sanjivani.app",  # Production domain
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 
-# ---------------------------------------------------------
-# DATA MODELS & INFO
-# ---------------------------------------------------------
+# Include API v2 routers
+app.include_router(predict_router)
+app.include_router(metrics_router)
 
-class PredictionResponse(BaseModel):
+
+@app.on_event("startup")
+async def startup_event():
+    """Initialize services on startup"""
+    print("🚀 Starting SANJIVANI 2.0...")
+    
+    # Initialize database
+    init_db()
+    
+    # Initialize AI engine (loads model)
+    inference_engine = get_inference_engine()
+    model_info = inference_engine.get_model_info()
+    if model_info["loaded"]:
+        print(f"✅ Model loaded: {model_info['metadata'].get('version', 'unknown')}")
+    else:
+        print("⚠️ Model not found - using mock mode")
+    
+    # Initialize knowledge engine
+    knowledge_engine = get_knowledge_engine()
+    kb_version = knowledge_engine.get_knowledge_version()
+    print(f"✅ Knowledge Base v{kb_version} loaded")
+    print(f"   Diseases: {len(knowledge_engine.get_all_diseases())}")
+    
+    print("✅ SANJIVANI 2.0 ready!")
+
+
+@app.get("/")
+async def root():
+    """API root - redirect to docs"""
+    return {
+        "name": "SANJIVANI API",
+        "version": "2.0.0",
+        "description": "AI-powered crop disease detection",
+        "docs": "/api/docs",
+        "health": "/api/v2/health",
+        "architecture": "Production-grade with separated concerns"
+    }
+
+
+# Legacy v1 endpoint (deprecated - kept for backward compatibility)
+from fastapi import File, UploadFile, HTTPException
+from pydantic import BaseModel
+
+class PredictionResponseV1(BaseModel):
+    """Legacy v1 response format (deprecated)"""
     disease: str
     confidence: float
     severity: str
     treatment: str
     prevention: str
 
-DISEASE_INFO = {
-    "early_blight": {
-        "severity": "Moderate",
-        "treatment": "Use copper-based fungicides. Remove infected leaves.",
-        "prevention": "Rotate crops. Ensure good airflow."
-    },
-    "late_blight": {
-        "severity": "High",
-        "treatment": "Apply fungicides immediately. Destroy infected plants.",
-        "prevention": "Use resistant varieties. Avoid overhead irrigation."
-    },
-    "healthy": {
-        "severity": "None",
-        "treatment": "None required.",
-        "prevention": "Continue good agricultural practices."
-    }
-}
-# Default fallback for unknown classes
-for k in ["target_spot", "mosaic_virus", "curl_virus", "bacterial_spot"]:
-    DISEASE_INFO[k] = {
-        "severity": "Unknown", 
-        "treatment": "Consult an agronomist.", 
-        "prevention": "Isolate plant."
-    }
-
-
-@app.post("/predict", response_model=PredictionResponse)
-async def predict(file: UploadFile = File(...)):
+@app.post("/predict", response_model=PredictionResponseV1, deprecated=True, tags=["legacy"])
+async def predict_v1(file: UploadFile = File(...)):
     """
-    Main prediction endpoint
-    Accepts image file and returns disease prediction with recommendations
+    Legacy v1 prediction endpoint (DEPRECATED)
+    
+    ⚠️ This endpoint is deprecated. Please use /api/v2/predict instead.
+    
+    The v2 endpoint provides:
+    - Structured response with categorized actions
+    - Performance metadata
+    - Alternative predictions
+    - Multilingual support
     """
     try:
-        # Read image file
         contents = await file.read()
         
-        # Preprocess image
-        img = preprocess_image(contents)
+        # Use new inference engine
+        inference_engine = get_inference_engine()
+        knowledge_engine = get_knowledge_engine()
         
-        # Predict disease
-        disease_key, confidence = predict_disease(img)
+        # Get prediction
+        prediction = inference_engine.predict(contents)
+        complete_response = knowledge_engine.map_prediction_to_response(
+            crop=prediction["crop"],
+            disease_key=prediction["disease_key"],
+            confidence=prediction["confidence"]
+        )
         
-        # Get disease information
-        disease_info = DISEASE_INFO.get(disease_key, DISEASE_INFO["early_blight"])
-        
-        # Format disease name for display
-        disease_name = disease_key.replace("_", " ").title()
-        if disease_key == "healthy":
-            disease_name = "Healthy"
-        
-        # Save to Database
-        scan_data = {
-            "disease": disease_name,
-            "confidence": float(confidence),
-            "severity": disease_info["severity"],
-            "filename": file.filename
-        }
-        save_scan(scan_data)
-        
-        return PredictionResponse(
-            disease=disease_name,
-            confidence=round(confidence * 100, 2),
-            severity=disease_info["severity"],
-            treatment=disease_info["treatment"],
-            prevention=disease_info["prevention"]
+        # Convert to v1 format
+        actions = complete_response["recommended_actions"]
+        return PredictionResponseV1(
+            disease=complete_response["disease"],
+            confidence=round(complete_response["confidence"] * 100, 2),
+            severity=complete_response["severity"],
+            treatment="; ".join(actions["immediate"][:2]) if actions["immediate"] else "No immediate action required",
+            prevention="; ".join(actions["preventive"][:2]) if actions["preventive"] else "Continue good practices"
         )
         
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"❌ Error: {e}")
         raise HTTPException(status_code=500, detail=f"Prediction failed: {str(e)}")
+
 
 if __name__ == "__main__":
     import uvicorn
-    # Added reload=True for development
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+
