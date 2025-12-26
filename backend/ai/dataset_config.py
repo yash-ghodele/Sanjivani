@@ -50,6 +50,7 @@ CLASS_NAMES = list(DISEASE_MAPPING.keys())
 
 # Model Hyperparameters
 MODEL_CONFIG = {
+    "num_classes": len(CLASS_NAMES),
     "input_size": (224, 224, 3),
     "batch_size": 32,
     "epochs": 5,  # Reduced for demonstration/portfolio speed (usually 10-20)

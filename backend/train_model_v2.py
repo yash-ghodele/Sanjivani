@@ -91,7 +91,7 @@ def create_model(num_classes: int):
         metrics=['accuracy', keras.metrics.Precision(), keras.metrics.Recall()]
     )
     
-    print(f"✅ Model created successfully")
+    print(f"Model created successfully")
     print(f"   Total params: {model.count_params():,}")
     print(f"   Trainable params: {sum([tf.size(w).numpy() for w in model.trainable_weights]):,}")
     
@@ -133,7 +133,7 @@ def setup_data_generators(dataset_dir: str):
     
     # Training generator
     train_gen = train_datagen.flow_from_directory(
-        dataset_dir,
+        os.path.join(dataset_dir, 'train'),
         target_size=IMG_SIZE,
         batch_size=BATCH_SIZE,
         class_mode='categorical',
@@ -145,7 +145,7 @@ def setup_data_generators(dataset_dir: str):
     
     # Validation generator
     val_gen = val_test_datagen.flow_from_directory(
-        dataset_dir,
+        os.path.join(dataset_dir, 'valid'),
         target_size=IMG_SIZE,
         batch_size=BATCH_SIZE,
         class_mode='categorical',
@@ -155,7 +155,7 @@ def setup_data_generators(dataset_dir: str):
         seed=42
     )
     
-    print(f"✅ Data generators ready")
+    print(f"Data generators ready")
     print(f"   Training samples: {train_gen.samples}")
     print(f"   Validation samples: {val_gen.samples}")
     print(f"   Classes: {len(train_gen.class_indices)}")
@@ -239,7 +239,10 @@ def train_model(model, base_model, train_gen, val_gen):
     
     # Combine histories
     for key in history1.history:
-        history1.history[key].extend(history2.history[key])
+        if key in history2.history:
+            history1.history[key].extend(history2.history[key])
+        else:
+            print(f"Warning: Key {key} not found in second training phase history")
     
     return history1
 
@@ -292,7 +295,7 @@ def evaluate_model(model, val_gen):
     plt.yticks(rotation=0)
     plt.tight_layout()
     plt.savefig(os.path.join(MODEL_SAVE_DIR, 'confusion_matrix.png'), dpi=300, bbox_inches='tight')
-    print(f"\n✅ Confusion matrix saved to models/confusion_matrix.png")
+    print(f"\nConfusion matrix saved to models/confusion_matrix.png")
     
     metrics = {
         "accuracy": float(accuracy),
@@ -301,7 +304,7 @@ def evaluate_model(model, val_gen):
         "f1_score": float(f1)
     }
     
-    print(f"\n📊 Model Performance:")
+    print(f"\nModel Performance:")
     print(f"   Accuracy:  {accuracy:.4f}")
     print(f"   Precision: {precision:.4f}")
     print(f"   Recall:    {recall:.4f}")
@@ -309,9 +312,9 @@ def evaluate_model(model, val_gen):
     
     # Check against thresholds
     if accuracy < PERFORMANCE_THRESHOLDS["min_accuracy"]:
-        print(f"\n⚠️ WARNING: Accuracy below threshold ({PERFORMANCE_THRESHOLDS['min_accuracy']})")
+        print(f"\nWARNING: Accuracy below threshold ({PERFORMANCE_THRESHOLDS['min_accuracy']})")
     else:
-        print(f"\n✅ Model meets performance thresholds!")
+        print(f"\nModel meets performance thresholds!")
     
     return metrics
 
@@ -347,16 +350,16 @@ def benchmark_inference(model):
     avg_time = np.mean(times)
     std_time = np.std(times)
     
-    print(f"✅ Inference benchmark complete")
+    print(f"Inference benchmark complete")
     print(f"   Average: {avg_time:.2f} ms")
     print(f"   Std Dev: {std_time:.2f} ms")
     print(f"   Min: {np.min(times):.2f} ms")
     print(f"   Max: {np.max(times):.2f} ms")
     
     if avg_time > PERFORMANCE_THRESHOLDS["max_inference_ms"]:
-        print(f"\n⚠️ WARNING: Inference time above target ({PERFORMANCE_THRESHOLDS['max_inference_ms']} ms)")
+        print(f"\nWARNING: Inference time above target ({PERFORMANCE_THRESHOLDS['max_inference_ms']} ms)")
     else:
-        print(f"\n✅ Inference time meets edge-ready target!")
+        print(f"\nInference time meets edge-ready target!")
     
     return float(avg_time)
 
@@ -381,7 +384,7 @@ def export_model(model, metrics, avg_inference_ms):
     h5_path = os.path.join(MODEL_SAVE_DIR, "plant_disease_v2.h5")
     model.save(h5_path)
     model_size_mb = os.path.getsize(h5_path) / (1024 * 1024)
-    print(f"✅ Saved .h5 model: {h5_path} ({model_size_mb:.2f} MB)")
+    print(f"Saved .h5 model: {h5_path} ({model_size_mb:.2f} MB)")
     
     # 2. Convert to TFLite (edge deployment)
     converter = tf.lite.TFLiteConverter.from_keras_model(model)
@@ -393,14 +396,14 @@ def export_model(model, metrics, avg_inference_ms):
         f.write(tflite_model)
     
     tflite_size_mb = os.path.getsize(tflite_path) / (1024 * 1024)
-    print(f"✅ Saved .tflite model: {tflite_path} ({tflite_size_mb:.2f} MB)")
+    print(f"Saved .tflite model: {tflite_path} ({tflite_size_mb:.2f} MB)")
     print(f"   Size reduction: {((model_size_mb - tflite_size_mb) / model_size_mb * 100):.1f}%")
     
     # 3. Save class names
     class_names_path = os.path.join(MODEL_SAVE_DIR, "class_names.json")
     with open(class_names_path, 'w') as f:
         json.dump(CLASS_NAMES, f, indent=2)
-    print(f"✅ Saved class names: {class_names_path}")
+    print(f"Saved class names: {class_names_path}")
     
     # 4. Save metadata
     metadata = {
@@ -423,7 +426,7 @@ def export_model(model, metrics, avg_inference_ms):
     metadata_path = os.path.join(MODEL_SAVE_DIR, "model_metadata.json")
     with open(metadata_path, 'w') as f:
         json.dump(metadata, f, indent=2)
-    print(f"✅ Saved metadata: {metadata_path}")
+    print(f"Saved metadata: {metadata_path}")
     
     return metadata
 
@@ -437,7 +440,7 @@ def main():
     
     # Check if dataset exists
     if not os.path.exists(DATASET_DIR):
-        print(f"❌ ERROR: Dataset not found at {DATASET_DIR}")
+        print(f"ERROR: Dataset not found at {DATASET_DIR}")
         print(f"\nPlease download dataset first:")
         print(f"   python backend/download_dataset.py")
         return
@@ -454,7 +457,7 @@ def main():
     history = train_model(model, base_model, train_gen, val_gen)
     training_time = (time.time() - start_time) / 60  # minutes
     
-    print(f"\n✅ Training complete in {training_time:.1f} minutes")
+    print(f"\nTraining complete in {training_time:.1f} minutes")
     
     # Evaluate
     metrics = evaluate_model(model, val_gen)
@@ -467,7 +470,7 @@ def main():
     
     # Final summary
     print(f"\n{'='*60}")
-    print("📊 TRAINING SUMMARY")
+    print("TRAINING SUMMARY")
     print(f"{'='*60}")
     print(f"Model: MobileNetV2")
     print(f"Classes: {num_classes}")
@@ -477,7 +480,7 @@ def main():
     print(f"TFLite size: {metadata['tflite_size_mb']:.2f} MB")
     print(f"Inference: {avg_inference_ms:.2f} ms")
     print(f"\n{'='*60}")
-    print(f"✅ SANJIVANI 2.0 model training complete!")
+    print(f"SANJIVANI 2.0 model training complete!")
     print(f"{'='*60}\n")
 
 
