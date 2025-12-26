@@ -1,14 +1,16 @@
 
 import { useRef, useState, useCallback, useEffect } from "react"
 import Webcam from "react-webcam"
-import { Button } from "../components/ui/Button"
-import { Camera as CameraIcon, X, Zap } from "lucide-react"
+import { ResultCard } from "../components/scan/ResultCard"
+import { ActionCard } from "../components/scan/ActionCard"
+import type { PredictionResponse } from "../types/api"
 
 export default function Scan() {
     const webcamRef = useRef<Webcam>(null)
     const [imgSrc, setImgSrc] = useState<string | null>(null)
     const [analyzing, setAnalyzing] = useState(false)
-    const [result, setResult] = useState<any>(null)
+    const [result, setResult] = useState<PredictionResponse | null>(null)
+    const [showActions, setShowActions] = useState(false)
     const [camReady, setCamReady] = useState(false)
 
     useEffect(() => {
@@ -19,7 +21,7 @@ export default function Scan() {
         const imageSrc = webcamRef.current?.getScreenshot()
         if (imageSrc) {
             setImgSrc(imageSrc)
-            // Haptic
+            // Haptic feedback
             if (navigator.vibrate) navigator.vibrate(50)
             analyzeImage(imageSrc)
         }
@@ -34,13 +36,15 @@ export default function Scan() {
             formData.append('file', blob, 'scan.jpg')
 
             const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
-            const apiRes = await fetch(`${API_URL}/predict`, {
+
+            // Use API v2 endpoint
+            const apiRes = await fetch(`${API_URL}/api/v2/predict`, {
                 method: 'POST',
                 body: formData
             })
 
-            if (!apiRes.ok) throw new Error('Failed')
-            const data = await apiRes.json()
+            if (!apiRes.ok) throw new Error('API request failed')
+            const data: PredictionResponse = await apiRes.json()
 
             setTimeout(() => {
                 setResult(data)
@@ -48,12 +52,42 @@ export default function Scan() {
             }, 1000)
 
         } catch (error) {
-            // Mock Fallback
+            console.error('Prediction error:', error)
+
+            // Mock fallback for development
             setTimeout(() => {
                 setResult({
+                    crop: "Tomato",
                     disease: "Early Blight",
-                    confidence: 94,
-                    treatment: "Use Chlorothalonil fungicide. Remove affected leaves."
+                    disease_key: "Early_Blight",
+                    confidence: 0.94,
+                    severity: "Moderate",
+                    explanation: "Fungal disease that typically starts on lower, older leaves and progresses upward.",
+                    recommended_actions: {
+                        immediate: [
+                            "Remove and destroy infected leaves immediately",
+                            "Apply copper-based fungicide (Copper oxychloride 50% WP @ 3g/L)"
+                        ],
+                        short_term: [
+                            "Apply Mancozeb 75% WP @ 2.5g/L every 7-10 days",
+                            "Ensure proper plant spacing for air circulation"
+                        ],
+                        preventive: [
+                            "Crop rotation with non-solanaceous crops",
+                            "Use disease-resistant varieties"
+                        ]
+                    },
+                    symptoms: [
+                        "Dark brown spots with concentric rings on older leaves",
+                        "Yellowing around spots"
+                    ],
+                    economic_impact: "Can reduce yields by 20-30% if left untreated",
+                    scientific_name: "Alternaria solani",
+                    metadata: {
+                        model_version: "2.0.0",
+                        inference_time_ms: 45,
+                        model_architecture: "MobileNetV2"
+                    }
                 })
                 setAnalyzing(false)
             }, 1500)
@@ -63,6 +97,7 @@ export default function Scan() {
     const reset = () => {
         setImgSrc(null)
         setResult(null)
+        setShowActions(false)
     }
 
     return (
@@ -108,29 +143,39 @@ export default function Scan() {
                         <img src={imgSrc} className="w-full h-full object-cover" alt="Scan" />
 
                         {/* Result Sheet */}
-                        {result && (
-                            <div className="absolute bottom-0 left-0 right-0 bg-white text-black p-6 rounded-t-3xl shadow-[0_-10px_40px_rgba(0,0,0,0.2)] animate-in slide-in-from-bottom duration-500">
-                                <div className="w-12 h-1 bg-gray-300 rounded-full mx-auto mb-4" />
+                        {result && !showActions && (
+                            <div className="absolute bottom-0 left-0 right-0">
+                                <ResultCard result={result} />
 
-                                <h2 className="text-2xl font-bold text-farmer-primary flex items-center gap-2 mb-2">
-                                    <Zap className="fill-current" />
-                                    {result.disease}
-                                </h2>
-                                <p className="text-sm text-gray-500 mb-4 font-medium">Confidence: {Math.round(result.confidence)}%</p>
-
-                                <div className="bg-orange-50 p-4 rounded-xl border border-orange-100 mb-6">
-                                    <p className="font-bold text-orange-800 mb-1">Treatment:</p>
-                                    <p className="text-gray-700 leading-snug">{result.treatment}</p>
+                                {/* View Actions Button */}
+                                <div className="bg-white px-6 pb-6">
+                                    <button
+                                        onClick={() => setShowActions(true)}
+                                        className="w-full py-3 bg-farmer-accent text-white font-bold rounded-lg hover:bg-farmer-accent/90 transition-colors"
+                                    >
+                                        View Treatment Plan
+                                    </button>
                                 </div>
-
-                                <Button size="lg" className="w-full font-bold text-lg" onClick={reset}>Scan Again</Button>
                             </div>
                         )}
 
+                        {/* Actions Sheet */}
+                        {result && showActions && (
+                            <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-[0_-10px_40px_rgba(0,0,0,0.2)] max-h-[80vh] overflow-y-auto">
+                                <div className="w-12 h-1 bg-gray-300 rounded-full mx-auto mt-4" />
+                                <ActionCard
+                                    actions={result.recommended_actions}
+                                    onClose={reset}
+                                />
+                            </div>
+                        )}
+
+                        {/* Analyzing Overlay */}
                         {analyzing && (
                             <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center text-white">
                                 <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin mb-4" />
                                 <p className="font-bold text-xl">Analyzing...</p>
+                                <p className="text-sm text-gray-300 mt-2">AI processing your image</p>
                             </div>
                         )}
                     </div>
