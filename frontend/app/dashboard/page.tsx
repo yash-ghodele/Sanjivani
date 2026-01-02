@@ -12,7 +12,6 @@ import Link from "next/link";
 // In a real app, we would fetch weather data here or pass it down
 
 import { useAuth } from "@/hooks/useAuth";
-import { demoUsers } from "@/lib/demoUsers";
 import { Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -20,8 +19,8 @@ export default function Dashboard() {
     const { user, loading, hasMounted } = useAuth();
     const [stats, setStats] = useState<any>(null);
 
-    // Determine Role (Mock Logic for Demo)
-    const role = demoUsers.find(u => u.email === user?.email)?.role || 'farmer';
+    // Default role for all authenticated users (can be extended with Firebase custom claims later)
+    const role = 'farmer';
 
     useEffect(() => {
         if (role === 'admin') {
