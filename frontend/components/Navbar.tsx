@@ -6,6 +6,8 @@ import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { AuthButton } from '@/components/AuthButton';
+import { NavbarLanguageSelector } from '@/components/NavbarLanguageSelector';
+import { useAuth } from '@/hooks/useAuth';
 import dynamic from 'next/dynamic';
 
 const GlobalSearchComponent = dynamic(() => import('@/components/GlobalSearch'), {
@@ -16,6 +18,7 @@ const GlobalSearchComponent = dynamic(() => import('@/components/GlobalSearch'),
 export function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const { user, hasMounted } = useAuth();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -24,6 +27,15 @@ export function Navbar() {
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
+
+    const handleScanClick = (e: React.MouseEvent) => {
+        if (!user) {
+            e.preventDefault();
+            alert('Please sign in to use the scan feature');
+            // Could also redirect to /dashboard which will show auth flow
+            window.location.href = '/dashboard';
+        }
+    };
 
     return (
         <nav
@@ -54,7 +66,8 @@ export function Navbar() {
 
                 {/* Action Button & Auth */}
                 <div className="hidden md:flex items-center gap-4">
-                    <Link href="/scan">
+                    <NavbarLanguageSelector />
+                    <Link href="/scan" onClick={handleScanClick}>
                         <button className="px-6 py-2.5 rounded-full bg-nature-600 text-white font-semibold text-sm hover:bg-nature-500 transition-all shadow-[0_0_20px_rgba(130,174,25,0.3)]">
                             Start Diagnosis
                         </button>
@@ -76,11 +89,14 @@ export function Navbar() {
             {/* Mobile Menu */}
             {mobileMenuOpen && (
                 <div className="md:hidden absolute top-full left-0 right-0 glass-nav border-t border-white/5 p-4 flex flex-col gap-4 animate-in slide-in-from-top-5">
+                    <div className="flex justify-center pb-4 border-b border-white/5">
+                        <NavbarLanguageSelector />
+                    </div>
                     <MobileNavLink href="/" onClick={() => setMobileMenuOpen(false)}>Home</MobileNavLink>
                     <MobileNavLink href="/dashboard" onClick={() => setMobileMenuOpen(false)}>Dashboard</MobileNavLink>
                     <MobileNavLink href="/calendar" onClick={() => setMobileMenuOpen(false)}>Calendar</MobileNavLink>
                     <MobileNavLink href="/faq" onClick={() => setMobileMenuOpen(false)}>FAQ</MobileNavLink>
-                    <Link href="/scan" onClick={() => setMobileMenuOpen(false)}>
+                    <Link href="/scan" onClick={(e) => { handleScanClick(e); setMobileMenuOpen(false); }}>
                         <button className="w-full btn-primary py-3">Start Diagnosis</button>
                     </Link>
                 </div>
