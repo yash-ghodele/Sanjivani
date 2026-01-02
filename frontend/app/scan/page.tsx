@@ -200,20 +200,20 @@ export default function ScanPage() {
     };
 
     return (
-        <div className="min-h-screen bg-black text-white p-4 pb-20">
+        <div className="min-h-screen bg-[#0f110f] text-white p-4 pb-20 pt-20">
             {/* Header */}
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-6 container-padding">
                 <Link href="/dashboard">
-                    <Button variant="ghost" size="icon" className="text-white">
+                    <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 rounded-full">
                         <X className="w-6 h-6" />
                     </Button>
                 </Link>
-                <h1 className="text-lg font-bold">New Scan</h1>
+                <h1 className="text-xl font-display font-bold">New Scan</h1>
                 <div className="w-10" /> {/* Spacer */}
             </div>
 
             {/* Main Content */}
-            <div className={`max-w-md mx-auto relative rounded-3xl overflow-hidden bg-nature-950/50 border border-nature-800 flex flex-col shadow-2xl shadow-nature-900/20 transition-all duration-500 ${result ? 'h-auto' : 'h-[60vh]'}`}>
+            <div className={`max-w-md mx-auto relative rounded-[2rem] overflow-hidden bg-[#1a1a18] border border-white/5 flex flex-col shadow-2xl transition-all duration-500 ${result ? 'h-auto' : 'h-[60vh]'} ring-1 ring-white/5`}>
 
                 {/* Selection Screen / Camera View / Image Preview */}
                 <div className={`relative bg-black flex items-center justify-center overflow-hidden transition-all duration-500 ${result ? 'h-48' : 'flex-1'}`}>

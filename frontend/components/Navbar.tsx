@@ -28,17 +28,17 @@ export function Navbar() {
     return (
         <nav
             className={cn(
-                "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-                isScrolled ? "glass-nav py-4" : "bg-transparent py-6"
+                "fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b border-transparent",
+                isScrolled ? "bg-[#1a1a18]/80 backdrop-blur-md border-white/5 py-4 shadow-lg" : "bg-transparent py-6"
             )}
         >
             <div className="container-padding flex items-center justify-between">
                 {/* Logo */}
                 <Link href="/" className="flex items-center gap-2 group">
-                    <div className="w-10 h-10 rounded-full bg-nature-500/10 flex items-center justify-center border border-nature-500/20 group-hover:bg-nature-500/20 transition-colors">
-                        <Leaf className="w-6 h-6 text-nature-500" />
+                    <div className="w-10 h-10 rounded-full bg-[#82ae19]/10 flex items-center justify-center border border-[#82ae19]/20 group-hover:bg-[#82ae19]/20 transition-colors">
+                        <Leaf className="w-6 h-6 text-[#82ae19]" />
                     </div>
-                    <span className="text-2xl font-display font-bold text-white tracking-tight">Sanjivani</span>
+                    <span className="text-2xl font-display font-medium text-white tracking-tight">Sanjivani</span>
                 </Link>
 
                 {/* Desktop Nav */}
@@ -57,7 +57,7 @@ export function Navbar() {
                 {/* Action Button & Auth */}
                 <div className="hidden md:flex items-center gap-4">
                     <Link href="/scan">
-                        <button className="btn-primary px-6 py-3 text-sm shadow-lg shadow-nature-500/20">
+                        <button className="px-6 py-2.5 rounded-full bg-white text-[#0f110f] font-semibold text-sm hover:bg-[#82ae19] hover:text-white transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_30px_rgba(130,174,25,0.4)]">
                             Start Diagnosis
                         </button>
                     </Link>

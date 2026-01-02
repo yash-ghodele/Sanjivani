@@ -19,7 +19,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className="antialiased bg-nature-900 text-white font-sans selection:bg-nature-500/30 selection:text-white" suppressHydrationWarning>
         <NotificationProvider>
-          <ServiceWorkerRegister />
+          {/* <ServiceWorkerRegister /> */}
           <Navbar />
           <main className="min-h-screen pt-16">
             {children}
