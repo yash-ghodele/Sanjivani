@@ -1,5 +1,6 @@
 import { HeroSection } from "@/components/landing/HeroSection";
 import { FeaturesGrid } from "@/components/landing/FeaturesGrid";
+import { AboutSection } from "@/components/landing/AboutSection";
 import { CTASection } from "@/components/landing/CTASection";
 import { FallingLeavesBackground } from "@/components/ui/FallingLeavesBackground";
 
@@ -14,6 +15,7 @@ export default function Home() {
         <FallingLeavesBackground />
 
         <FeaturesGrid />
+        <AboutSection />
         <CTASection />
       </div>
     </div>
