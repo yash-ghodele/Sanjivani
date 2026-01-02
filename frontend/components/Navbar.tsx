@@ -8,12 +8,6 @@ import { Button } from '@/components/ui/button';
 import { AuthButton } from '@/components/AuthButton';
 import { NavbarLanguageSelector } from '@/components/NavbarLanguageSelector';
 import { useAuth } from '@/hooks/useAuth';
-import dynamic from 'next/dynamic';
-
-const GlobalSearchComponent = dynamic(() => import('@/components/GlobalSearch'), {
-    ssr: false,
-    loading: () => <div className="h-10 w-10 xl:w-60 bg-white/5 rounded-lg animate-pulse" />
-});
 
 export function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -54,14 +48,11 @@ export function Navbar() {
                 </Link>
 
                 {/* Desktop Nav */}
-                <div className="hidden md:flex items-center gap-8">
-                    <GlobalSearchComponent />
-                    <div className="flex items-center gap-6">
-                        <NavLink href="/">Home</NavLink>
-                        <NavLink href="/dashboard">Dashboard</NavLink>
-                        <NavLink href="/calendar">Calendar</NavLink>
-                        <NavLink href="/faq">FAQ</NavLink>
-                    </div>
+                <div className="hidden md:flex items-center gap-6">
+                    <NavLink href="/">Home</NavLink>
+                    <NavLink href="/dashboard">Dashboard</NavLink>
+                    <NavLink href="/calendar">Calendar</NavLink>
+                    <NavLink href="/faq">FAQ</NavLink>
                 </div>
 
                 {/* Action Button & Auth */}
