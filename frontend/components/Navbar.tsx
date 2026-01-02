@@ -50,7 +50,6 @@ export function Navbar() {
                         <NavLink href="/calendar">Calendar</NavLink>
                         <NavLink href="/history">History</NavLink>
                         <NavLink href="/faq">FAQ</NavLink>
-                        <NavLink href="/about">About</NavLink>
                     </div>
                 </div>
 
@@ -83,7 +82,6 @@ export function Navbar() {
                     <MobileNavLink href="/calendar" onClick={() => setMobileMenuOpen(false)}>Calendar</MobileNavLink>
                     <MobileNavLink href="/history" onClick={() => setMobileMenuOpen(false)}>History</MobileNavLink>
                     <MobileNavLink href="/faq" onClick={() => setMobileMenuOpen(false)}>FAQ</MobileNavLink>
-                    <MobileNavLink href="/about" onClick={() => setMobileMenuOpen(false)}>About</MobileNavLink>
                     <Link href="/scan" onClick={() => setMobileMenuOpen(false)}>
                         <button className="w-full btn-primary py-3">Start Diagnosis</button>
                     </Link>
