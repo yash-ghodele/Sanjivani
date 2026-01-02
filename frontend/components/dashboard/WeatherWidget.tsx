@@ -1,124 +1,131 @@
-'use client';
+"use client";
 
-import { Cloud, Droplets, Wind, MapPin, Loader2 } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { fetchLiveWeather, getUserLocation, WeatherData } from '@/services/weather';
+import { useEffect, useState } from "react";
+import { Cloud, Droplets, Wind, MapPin, Loader2, RefreshCw } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+interface WeatherData {
+    temperature: number;
+    condition: string;
+    description: string;
+    humidity: number;
+    wind_speed: number;
+    location: string;
+}
 
 export function WeatherWidget() {
     const [weather, setWeather] = useState<WeatherData | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        loadWeather();
-        // Refresh every 5 minutes
-        const interval = setInterval(loadWeather, 5 * 60 * 1000);
-        return () => clearInterval(interval);
-    }, []);
-
-    const loadWeather = async () => {
+    const fetchWeather = async () => {
+        setLoading(true);
+        setError(null);
         try {
-            setError(null);
-            const location = await getUserLocation();
-            const data = await fetchLiveWeather(location.lat, location.lon);
-            setWeather(data);
-        } catch (error) {
-            console.error('Failed to load weather:', error);
-            setError('Weather data unavailable');
-            // Mock data for fallback so UI doesn't break
+            // Default to Nagpur/Central India coordinates if geolocation fails or is denied
+            let lat = 21.1458;
+            let lon = 79.0882;
+
+            if (navigator.geolocation) {
+                try {
+                    const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+                        navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 5000 });
+                    });
+                    lat = position.coords.latitude;
+                    lon = position.coords.longitude;
+                } catch (e) {
+                    console.warn("Geolocation denied or timed out, using default.", e);
+                }
+            }
+
+            // Safety check
+            if (isNaN(lat) || isNaN(lon)) {
+                lat = 21.1458;
+                lon = 79.0882;
+            }
+
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+            const res = await fetch(`${apiUrl}/api/v2/weather?lat=${lat}&lon=${lon}`);
+
+            if (!res.ok) throw new Error("Failed to fetch weather");
+
+            const data = await res.json();
+            if (data.success && data.data) {
+                setWeather(data.data);
+            } else {
+                throw new Error("Invalid format");
+            }
+        } catch (err) {
+            console.error("Weather fetch error:", err);
+            setError("Weather unavailable");
+            // Fallback for demo/offline
             setWeather({
                 temperature: 28,
-                condition: "Clear",
-                description: "Sunny",
+                condition: "Sunny",
+                description: "clear sky",
                 humidity: 45,
                 wind_speed: 12,
-                location: "Jalgaon (Offline)"
+                location: "Demo Farm Location"
             });
         } finally {
             setLoading(false);
         }
     };
 
+    useEffect(() => {
+        fetchWeather();
+    }, []);
+
     if (loading) {
         return (
-            <div className="glass-card p-6 rounded-3xl border border-nature-800 flex items-center justify-center min-h-[200px]">
-                <Loader2 className="w-6 h-6 text-nature-400 animate-spin" />
+            <div className="glass-card p-6 rounded-3xl h-full flex items-center justify-center min-h-[200px]">
+                <Loader2 className="w-8 h-8 text-[#82ae19] animate-spin" />
             </div>
         );
     }
 
-    // Fallback if weather is null (shouldn't happen with our service update, but safety first)
-    const effectiveWeather = weather || {
-        temperature: 28,
-        condition: "Clear",
-        description: "Sunny",
-        humidity: 45,
-        wind_speed: 12,
-        location: error || "Jalgaon (Offline)"
-    };
-
-    const getWeatherIcon = (condition: string) => {
-        switch (condition?.toLowerCase()) {
-            case 'clear': return '☀️';
-            case 'clouds': return '☁️';
-            case 'rain': return '🌧️';
-            case 'drizzle': return '🌦️';
-            case 'thunderstorm': return '⛈️';
-            case 'snow': return '❄️';
-            case 'mist':
-            case 'haze': return '🌫️';
-            default: return '🌤️';
-        }
-    };
-
     return (
-        <div className="glass-card p-6 rounded-3xl border border-nature-800 relative overflow-hidden">
-            {/* Background decoration */}
-            <div className="absolute top-0 right-0 w-32 h-32 bg-nature-500/10 rounded-full blur-3xl" />
+        <div className="glass-card p-6 rounded-3xl text-white relative overflow-hidden h-full flex flex-col justify-between group">
+            {/* Background Gradient */}
+            <div className="absolute top-0 right-0 w-32 h-32 bg-[#82ae19]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
 
-            <div className="relative">
-                {/* Header */}
+            <div className="relative z-10">
                 <div className="flex items-start justify-between mb-4">
                     <div>
-                        <div className="flex items-center gap-2 mb-1">
-                            <MapPin className="w-4 h-4 text-gray-400" />
-                            <p className="text-sm text-gray-400">{effectiveWeather.location}</p>
+                        <div className="flex items-center gap-2 text-gray-400 text-xs uppercase tracking-wider font-bold mb-1">
+                            <MapPin className="w-3 h-3" />
+                            {weather?.location || "Unknown"}
                         </div>
-                        <div className="flex items-baseline gap-2">
-                            <h3 className="text-5xl font-bold text-white">{effectiveWeather.temperature}°</h3>
-                            <span className="text-4xl">{getWeatherIcon(effectiveWeather.condition)}</span>
-                        </div>
-                        <p className="text-sm text-nature-300 capitalize mt-1">{effectiveWeather.description}</p>
+                        <div className="text-sm text-gray-400 capitalize">{weather?.description}</div>
                     </div>
+                    <Button variant="ghost" size="icon" onClick={fetchWeather} className="h-8 w-8 text-[#82ae19] hover:bg-[#82ae19]/10 rounded-full">
+                        <RefreshCw className="w-4 h-4" />
+                    </Button>
                 </div>
 
-                {/* Weather details */}
-                <div className="grid grid-cols-2 gap-4 mt-6 pt-4 border-t border-white/10">
-                    <div className="flex items-center gap-2">
-                        <Droplets className="w-4 h-4 text-blue-400" />
-                        <div>
-                            <p className="text-xs text-gray-400">Humidity</p>
-                            <p className="text-sm font-bold text-white">{effectiveWeather.humidity}%</p>
-                        </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <Wind className="w-4 h-4 text-nature-400" />
-                        <div>
-                            <p className="text-xs text-gray-400">Wind</p>
-                            <p className="text-sm font-bold text-white">{effectiveWeather.wind_speed} km/h</p>
-                        </div>
+                <div className="flex items-center gap-4 mb-6">
+                    <Cloud className="w-16 h-16 text-[#82ae19]" />
+                    <div>
+                        <div className="text-5xl font-display font-bold">{weather?.temperature}°</div>
+                        <div className="text-sm text-gray-400">Celsius</div>
                     </div>
                 </div>
+            </div>
 
-                {/* Farming tip */}
-                <div className="mt-4 p-3 rounded-xl bg-nature-500/10 border border-nature-500/20">
-                    <p className="text-xs text-nature-300">
-                        {effectiveWeather.wind_speed > 15
-                            ? '⚠️ High winds - avoid spraying pesticides'
-                            : effectiveWeather.humidity > 80
-                                ? '💧 High humidity - monitor for fungal diseases'
-                                : '✅ Good conditions for field work'}
-                    </p>
+            <div className="grid grid-cols-2 gap-4 relative z-10">
+                <div className="bg-white/5 rounded-2xl p-3 border border-white/5 flex items-center gap-3">
+                    <Droplets className="w-5 h-5 text-blue-400" />
+                    <div>
+                        <div className="text-lg font-bold">{weather?.humidity}%</div>
+                        <div className="text-[10px] text-gray-500 uppercase">Humidity</div>
+                    </div>
+                </div>
+                <div className="bg-white/5 rounded-2xl p-3 border border-white/5 flex items-center gap-3">
+                    <Wind className="w-5 h-5 text-gray-400" />
+                    <div>
+                        <div className="text-lg font-bold">{weather?.wind_speed} <span className="text-xs font-normal text-gray-500">km/h</span></div>
+                        <div className="text-[10px] text-gray-500 uppercase">Wind</div>
+                    </div>
                 </div>
             </div>
         </div>

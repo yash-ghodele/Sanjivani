@@ -33,7 +33,7 @@ Key differentiators:
   MobileNetV2-based inference designed for sub-100ms latency and exportable to `.h5` and `.tflite`.
 
 * **Modern Frontend Stack**
-  Next.js App Router with a refined, farmer-friendly UI built for clarity and performance.
+  Next.js App Router with a "Green Space" aesthetic (Deep Forest + Neon) built for clarity and immersion.
 
 * **Real Testing Discipline**
   34 automated tests with ~70% coverage, mock-mode CI support, and real-model readiness.
@@ -50,7 +50,7 @@ graph TB
     subgraph "Frontend (Next.js)"
         A[App Router]
         B[Server / Client Components]
-        C[Tailwind UI]
+        C[Tailwind UI + Animations]
     end
 
     subgraph "API Layer"
@@ -59,25 +59,20 @@ graph TB
 
     subgraph "AI Layer"
         E[Inference Engine<br/>MobileNetV2]
-        F[Performance Metrics]
+        F[Generative Analysis<br/>Gemini 1.5 Flash]
     end
 
-    subgraph "Knowledge Layer"
-        G[Disease Knowledge DB<br/>JSON v2.0.0]
-        H[Deterministic Treatment Logic]
-    end
-
-    subgraph "Data Layer"
-        I[Firebase Firestore<br/>Scan History]
+    subgraph "Data Services"
+        G[OpenWeatherMap API]
+        H[Firebase Firestore]
     end
 
     A -->|REST| D
     B -->|SSR / Client Fetch| D
     D --> E
-    E --> F
-    D --> H
-    H --> G
-    E --> I
+    D --> F
+    D --> G
+    E --> H
 ```
 
 **→ [Detailed architecture breakdown](docs/architecture.md)**
@@ -89,26 +84,67 @@ graph TB
 ### 🤖 AI System
 
 * MobileNetV2 with ImageNet transfer learning
-* Focused scope: **10 diseases across 3 crops** (Tomato, Potato, Rice)
+* **Generative AI** powered by Gemini 1.5 Flash for symptom verification
+* Focus: **10 diseases across 3 crops** (Tomato, Potato, Rice)
 * Designed for **<100ms inference latency**
 * Dual export formats: `.h5` (server) and `.tflite` (edge)
-* Metrics-ready pipeline (Accuracy, Precision, Recall, F1-Score)
+
+> **Role of Generative AI (Gemini)**
+> Gemini 1.5 Flash is used strictly as a *supporting analysis layer* to:
+> * Validate symptom descriptions
+> * Generate human-readable explanations
+>
+> All treatment and prevention advice is **deterministically generated** from the knowledge base and cannot be overridden by LLM output.
+
+### 📌 Implementation Status
+
+| Feature | Status |
+|------|------|
+| Tomato & Potato diseases (7 classes) | ✅ Implemented |
+| Rice diseases | 🛠 Planned (v2.1) |
+| Offline scan queue | 🛠 Planned |
+| TFLite edge deployment | 🛠 Planned |
+| Multilingual UI | 🛠 Planned |
 
 ### 📡 API Design
 
 * RESTful API v2 with strongly typed responses
-* Clear separation of prediction and treatment logic
+* **Real-time Weather Intelligence** for contextual advice
 * Categorized recommendations: **Immediate / Short-term / Preventive**
 * Model metadata included per prediction (version, inference time)
-* Multilingual support planned (EN active, HI & MR roadmap)
 
 ### 🖥️ Next.js Frontend
 
-* App Router architecture
-* Dark, nature-inspired UI focused on readability
+* App Router architecture with **Server Side Rendering** support
+* **Green Space Design**: "Deep Forest" theme with falling leaves motion effects
 * Glassmorphism used selectively for result emphasis
 * Mobile-first, touch-friendly layout
-* Optional real-time weather integration (OpenWeather API)
+* **Offline-Ready** architecture with PWA capabilities
+
+---
+
+### Severity Scoring
+
+Severity is derived from:
+- Model confidence score
+- Disease-specific risk mapping
+
+It is categorized as:
+- **Low**: Monitor only (e.g., Early deficiencies)
+- **Medium**: Preventive action advised
+- **High**: Immediate treatment required
+
+## ❌ Explicit Non-Goals
+
+- Replacing agricultural experts
+- Autonomous pesticide dosage decisions
+- Fully offline AI inference (yet)
+- Unsupervised treatment automation
+
+## 🚧 Failure Modes
+
+Every system has limits. We have explicitly documented ours here:
+**→ [Use Cases & Failure Modes Analysis](docs/FAILURE_MODES.md)**
 
 ---
 

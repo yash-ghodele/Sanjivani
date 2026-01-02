@@ -23,7 +23,8 @@ backend/
 
 *   **Structured API Response**: Returns `crop`, `disease`, `confidence`, `severity`, `actions`, and `metadata`.
 *   **Dual Mode Inference**: Supports both Server-Side (TensorFlow) and Edge (TFLite) models.
-*   **Performance Tracking**: Tracks inference time (ms) and model version in every response.
+*   **Generative AI Diagnosis**: Uses Gemini 1.5 Flash for *explanation/validation only*. Treatment advice is 100% deterministic (from KB).
+*   **Weather Intelligence**: Real-time localized weather data via OpenWeatherMap API for context-aware farming advice.
 *   **Knowledge Integration**: Decouples "What is it?" (AI) from "What to do?" (Knowledge Base).
 
 ## 🛠️ Setup & Run
@@ -48,5 +49,5 @@ pytest tests/
 
 *   **Architecture**: MobileNetV2 (Transfer Learning from ImageNet)
 *   **Input Size**: 224x224 RGB
-*   **Classes**: 7 (Tomato/Potato varieties)
+*   **Classes**: 7 (Tomato: 4, Potato: 3)
 *   **Target Inference**: <100ms

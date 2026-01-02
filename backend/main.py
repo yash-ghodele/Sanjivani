@@ -40,6 +40,7 @@ app.add_middleware(
         "http://localhost:5173",
         "http://localhost:3000",
         "http://localhost:5174",
+        "http://localhost:3005", # Added for Dev
         "https://sanjivani.app",  # Production domain
     ],
     allow_credentials=True,

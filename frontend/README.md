@@ -2,18 +2,25 @@
 
 A high-performance, accessible web interface for the Sanjivani AI platform, built with **Next.js 15 (App Router)** and **Tailwind CSS**.
 
-## 🎨 Design Philosophy
+## 🎨 Design Philosophy ("Green Space")
 
 *   **"Dumb Client" Architecture**: The frontend handles **no business logic**. It strictly renders the API's structured response.
-*   **Premium Nature Theme**: Deep slate backgrounds with neon green accents using `glassmorphism` for clarity.
-*   **Accessibility**: High contrast, large touch targets, and clear typography (Outfit/Inter).
+*   **Deep Forest Theme**: Immersive `#0f110f` backgrounds with `#82ae19` neon accents and glassmorphism for a premium feel.
+*   **Dynamic Visuals**: Features "Falling Leaves" motion effects and seamless section transitions for a unified user experience.
+*   **Accessibility**: High contrast text, clear botany-inspired iconography, and large touch targets.
 
 ## ⚡ Features
 
 *   **Camera Integration**: Native HTML5 camera access for real-time scanning.
-*   **Dynamic Dashboard**: Live weather widget (OpenWeather) and recent activity.
-*   **Responsive Results**: Adaptive cards for "Immediate", "Short-term", and "Preventive" actions.
-*   **PWA Ready**: Manifest and service worker configuration for offline capability (Roadmap).
+*   **Dynamic Dashboard**: Live weather widget (OpenWeather) and recent activity tracking.
+*   **Result Cards**: Adaptive cards for "Immediate", "Short-term", and "Preventive" actions.
+*   **Interactive Landing**: Engaging hero section with animated elements and seamless scroll effects.
+*   **PWA-Enabled**: Frontend architecture ready for Progressive Web App features (manifest included).
+
+> **Planned Offline Strategy**:
+> - IndexedDB image caching
+> - Deferred status upload queue
+> - Sync-on-reconnect implementation
 
 ## 🛠️ Setup
 

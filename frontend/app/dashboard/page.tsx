@@ -77,10 +77,10 @@ export default function Dashboard() {
                             <img src={user.photoURL} alt="User" className="w-full h-full object-cover" />
                         ) : role === 'farmer' ? (
                             // eslint-disable-next-line @next/next/no-img-element
-                            <img src="/assets/farmer-icon.png" alt="Farmer" className="w-full h-full object-cover" />
+                            <img src="/assets/farmer-icon.jpg" alt="Farmer" className="w-full h-full object-cover" />
                         ) : (
                             // eslint-disable-next-line @next/next/no-img-element
-                            <img src="https://api.dicebear.com/9.x/avataaars/svg?seed=Felix" alt="User" />
+                            <img src="/assets/farmer-avatar.avif" alt="User" className="w-full h-full object-cover" />
                         )}
                     </div>
                 </div>
