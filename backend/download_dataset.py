@@ -15,7 +15,7 @@ def setup_dataset():
 
     # Define target paths
     # We want valid/train folders inside backend/dataset/PlantVillage
-    base_dir = Path(__file__).parent.absolute() # D:/Projects/CropGuard/backend
+    base_dir = Path(__file__).parent.absolute() # D:/Projects/Sanjivani/backend
     target_dir = base_dir / "dataset" / "PlantVillage"
     
     print(f"📂 Target directory: {target_dir}")

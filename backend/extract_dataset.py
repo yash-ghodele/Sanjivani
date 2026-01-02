@@ -6,7 +6,7 @@ from pathlib import Path
 
 def extract_dataset():
     zip_path = Path(r"C:\Users\Yash\Downloads\archive.zip")
-    target_dir = Path(r"D:/Projects/CropGuard/backend/dataset/PlantVillage")
+    target_dir = Path(r"D:/Projects/Sanjivani/backend/dataset/PlantVillage")
     
     print(f"📂 Extracting from: {zip_path}")
     print(f"📂 Target: {target_dir}")
