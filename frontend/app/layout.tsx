@@ -4,8 +4,6 @@ import "@fontsource/outfit/400.css";
 import "@fontsource/outfit/700.css";
 import "@fontsource/inter/400.css";
 import "@fontsource/inter/600.css";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
 
 import { NotificationProvider } from "@/context/NotificationContext";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
@@ -20,11 +18,7 @@ export default function RootLayout({
       <body className="antialiased bg-nature-900 text-white font-sans selection:bg-nature-500/30 selection:text-white" suppressHydrationWarning>
         <NotificationProvider>
           {/* <ServiceWorkerRegister /> */}
-          <Navbar />
-          <main className="min-h-screen">
-            {children}
-          </main>
-          <Footer />
+          {children}
         </NotificationProvider>
       </body>
     </html>
