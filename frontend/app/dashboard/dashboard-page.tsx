@@ -29,6 +29,9 @@ export default function Dashboard() {
     const { user, loading, hasMounted } = useAuth();
     const [scans, setScans] = useState<ScanRecord[]>([]);
 
+    // Hooks must be called unconditionally at the top level
+    const { weather, loading: weatherLoading, error: weatherError, refetch: refetchWeather } = useWeather();
+
     useEffect(() => {
         loadScanHistory();
     }, []);
@@ -102,6 +105,9 @@ export default function Dashboard() {
         return tasks;
     };
 
+    const stats = calculateStats();
+    const todaysTasks = generateTodaysTasks();
+
     if (!hasMounted) return null;
 
     if (loading) {
@@ -111,11 +117,6 @@ export default function Dashboard() {
             </div>
         );
     }
-
-
-    const { weather, loading: weatherLoading, error: weatherError, refetch: refetchWeather } = useWeather();
-    const stats = calculateStats();
-    const todaysTasks = generateTodaysTasks();
 
     return (
         <div className="flex min-h-screen bg-[#0f110f]">
