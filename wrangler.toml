@@ -1,0 +1,9 @@
+name = "sanjivani"
+compatibility_flags = ["nodejs_compat"]
+
+[build]
+command = "cd frontend && npm run pages:build"
+cwd = "/"
+
+[build.upload]
+format = "service-worker"
