@@ -1,3 +1,7 @@
+# Render.com deployment configuration for Sanjivani 2.0 Backend
+# This file configures the FastAPI backend service deployment
+# Frontend is deployed separately on Cloudflare Pages
+
 services:
   - type: web
     name: sanjivani-backend
@@ -11,12 +15,16 @@ services:
       cd backend
       uvicorn main:app --host 0.0.0.0 --port 10000
     envVars:
+      # Required: Gemini AI API key for crop disease diagnosis
       - key: GEMINI_API_KEY
         sync: false
+      # Required: OpenWeather API key for weather data
       - key: OPENWEATHER_API_KEY
         sync: false
+      # Required: Firebase service account credentials (JSON string)
       - key: FIREBASE_CREDENTIALS
         sync: false
+      # Python version for the runtime
       - key: PYTHON_VERSION
-        value: 3.10.0
+        value: 3.11.0
     autoDeploy: true
