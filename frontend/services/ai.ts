@@ -1,4 +1,5 @@
-import { RecommendedActions, PredictionMetadata, PredictionResponse } from './api';
+// RecommendedActions, PredictionMetadata, PredictionResponse are unused
+// import { RecommendedActions, PredictionMetadata, PredictionResponse } from './api';
 
 export interface GeminiAnalysisResponse {
     explanation: string;

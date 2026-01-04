@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
 type NotificationType = 'info' | 'success' | 'warning' | 'error';
 
@@ -21,7 +21,11 @@ const NotificationContext = createContext<NotificationContextType | undefined>(u
 export function NotificationProvider({ children }: { children: React.ReactNode }) {
     const [notifications, setNotifications] = useState<Notification[]>([]);
 
-    const addNotification = (type: NotificationType, message: string) => {
+    const removeNotification = React.useCallback((id: string) => {
+        setNotifications(prev => prev.filter(n => n.id !== id));
+    }, []);
+
+    const addNotification = React.useCallback((type: NotificationType, message: string) => {
         const id = Date.now().toString();
         setNotifications(prev => [...prev, { id, type, message }]);
 
@@ -29,14 +33,16 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
         setTimeout(() => {
             removeNotification(id);
         }, 5000);
-    };
+    }, [removeNotification]);
 
-    const removeNotification = (id: string) => {
-        setNotifications(prev => prev.filter(n => n.id !== id));
-    };
+    const value = React.useMemo(() => ({
+        notifications,
+        addNotification,
+        removeNotification
+    }), [notifications, addNotification, removeNotification]);
 
     return (
-        <NotificationContext.Provider value={{ notifications, addNotification, removeNotification }}>
+        <NotificationContext.Provider value={value}>
             {children}
             {/* Toast Container */}
             <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2">

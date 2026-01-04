@@ -1,5 +1,5 @@
 import "./globals.css";
-import type { Metadata } from "next";
+
 import "@fontsource/outfit/400.css";
 import "@fontsource/outfit/700.css";
 import "@fontsource/inter/400.css";
@@ -7,7 +7,7 @@ import "@fontsource/inter/600.css";
 
 import { NotificationProvider } from "@/context/NotificationContext";
 import { I18nProvider } from "@/components/I18nProvider";
-import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
+
 
 export default function RootLayout({
   children,

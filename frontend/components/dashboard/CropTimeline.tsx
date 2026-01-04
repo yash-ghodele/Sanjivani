@@ -2,21 +2,21 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { Calendar, Droplets, Sun, Sprout, Leaf } from 'lucide-react';
+import { Calendar, Sun, Sprout, Leaf } from 'lucide-react';
 
-interface Stage {
+export interface Stage {
     name: string;
     days: number;
     color: string;
 }
 
-interface SowingWindow {
+export interface SowingWindow {
     season: string;
     months: string[];
     color: string;
 }
 
-interface CropCalendarData {
+export interface CropCalendarData {
     sowing_windows: SowingWindow[];
     duration_days: number;
     stages: Stage[];

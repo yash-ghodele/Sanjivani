@@ -20,6 +20,7 @@ export default function ScanPage() {
     const [image, setImage] = useState<string | null>(null);
     const [analyzing, setAnalyzing] = useState(false);
     const [result, setResult] = useState<PredictionResponse | null>(null);
+    const [scanId, setScanId] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [mode, setMode] = useState<'select' | 'camera' | 'upload'>('select');
     const [isDragging, setIsDragging] = useState(false);
@@ -112,15 +113,16 @@ export default function ScanPage() {
     const resetScan = () => {
         setImage(null);
         setResult(null);
+        setScanId(null);
         setMode('select');
         setError(null);
         stopCamera();
     };
 
-    const saveScanToHistory = (result: PredictionResponse, imageUrl: string) => {
+    const saveScanToHistory = (id: string, result: PredictionResponse, imageUrl: string) => {
         try {
             const scanRecord = {
-                id: Date.now().toString(),
+                id,
                 imageUrl,
                 crop: result.crop,
                 disease: result.disease,
@@ -181,9 +183,18 @@ export default function ScanPage() {
             // Compress image
             const compressedFile = await compressImage(fileToUpload);
 
+            // Convert compressed file to Base64 for optimal storage
+            const compressedBase64 = await new Promise<string>((resolve) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result as string);
+                reader.readAsDataURL(compressedFile);
+            });
+
             const data = await analyzeCropImage(compressedFile);
+            const newScanId = Date.now().toString();
             setResult(data);
-            saveScanToHistory(data, image);
+            setScanId(newScanId);
+            saveScanToHistory(newScanId, data, compressedBase64);
 
             // Store for results page
             localStorage.setItem('latest_scan_result', JSON.stringify(data));
@@ -374,7 +385,7 @@ export default function ScanPage() {
                                     </div>
                                     <h2 className="text-2xl font-bold text-white">{result.disease}</h2>
                                     <p className="text-sm text-gray-400 mt-1">{result.explanation}</p>
-                                    <FeedbackDialog scanId={Date.now().toString()} prediction={result.disease} />
+                                    {scanId && <FeedbackDialog scanId={scanId} prediction={result.disease} />}
                                 </div>
                                 <div className="text-center bg-white/5 px-3 py-2 rounded-lg border border-white/10">
                                     <div className="text-2xl font-bold text-nature-400">{(result.confidence * 100).toFixed(0)}%</div>

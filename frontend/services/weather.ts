@@ -73,7 +73,16 @@ export async function getUserLocation(): Promise<{ lat: number, lon: number }> {
 }
 
 // Legacy function for backward compatibility
-export async function getWeather(lat?: number, lon?: number): Promise<any> {
+interface LegacyWeatherData {
+    temp: number;
+    condition: string;
+    location: string;
+    windSpeed: number;
+    humidity: number;
+    icon: string;
+}
+
+export async function getWeather(lat?: number, lon?: number): Promise<LegacyWeatherData> {
     const location = lat && lon ? { lat, lon } : await getUserLocation();
     const weather = await fetchLiveWeather(location.lat, location.lon);
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { Shield, Wifi, Clock, Database, Users, TrendingDown } from "lucide-react";
+import { ReactNode } from 'react';
 
 export function FeaturesGrid() {
     return (
@@ -14,7 +15,7 @@ export function FeaturesGrid() {
                         <span className="text-gray-400">late disease detection</span>
                     </h2>
                     <p className="text-lg text-gray-400">
-                        Expert agronomists aren't always available when you need them. Chemical overuse happens due to guesswork. We're here to change that.
+                        Expert agronomists aren&apos;t always available when you need them. Chemical overuse happens due to guesswork. We&apos;re here to change that.
                     </p>
                 </div>
 
@@ -62,8 +63,9 @@ export function FeaturesGrid() {
     );
 }
 
+
 function BenefitCard({ icon, title, description, badge }: {
-    icon: React.ReactNode;
+    icon: ReactNode;
     title: string;
     description: string;
     badge: string;

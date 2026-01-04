@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, ElementType, ReactNode } from 'react';
 import { MapPin, Calendar, Clock, ScanLine, CalendarDays, Download, HelpCircle, Home } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
@@ -95,13 +95,14 @@ export function DashboardSidebar({ userName, totalScans, alerts, onExport }: Das
                         lon: longitude
                     });
                 }
-            } catch (error: any) {
+            } catch (error) {
+                const geoError = error as GeolocationPositionError;
                 // Handle specific geolocation errors
-                if (error.code === 1) {
+                if (geoError.code === 1) {
                     console.log('Location access denied by user. Please enable location to see your area.');
-                } else if (error.code === 2) {
+                } else if (geoError.code === 2) {
                     console.log('Location unavailable - position could not be determined.');
-                } else if (error.code === 3) {
+                } else if (geoError.code === 3) {
                     console.log('Location request timed out.');
                 } else {
                     console.log('Could not fetch location.');
@@ -227,7 +228,7 @@ export function DashboardSidebar({ userName, totalScans, alerts, onExport }: Das
     );
 }
 
-function NavLink({ href, icon: Icon, children }: { href: string; icon: any; children: React.ReactNode }) {
+function NavLink({ href, icon: Icon, children }: { href: string; icon: ElementType; children: ReactNode }) {
     return (
         <Link href={href}>
             <div className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-all">

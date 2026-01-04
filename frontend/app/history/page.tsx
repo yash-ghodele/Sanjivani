@@ -2,9 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Calendar, Clock, Leaf, TrendingUp, Download, Trash2, Search } from "lucide-react";
+import { ArrowLeft, Calendar, Leaf, TrendingUp, Download, Trash2, Search } from "lucide-react";
 import Link from 'next/link';
-import Image from 'next/image';
 
 interface ScanRecord {
     id: string;
@@ -27,21 +26,20 @@ export default function HistoryPage() {
     const [searchQuery, setSearchQuery] = useState('');
     const [filterSeverity, setFilterSeverity] = useState<string>('all');
 
+
+
     useEffect(() => {
         // Load scan history from localStorage
-        loadScanHistory();
-    }, []);
-
-    const loadScanHistory = () => {
         try {
             const history = localStorage.getItem('scan_history');
             if (history) {
                 const parsed = JSON.parse(history);
-                // Normalize confidence values (fix legacy data that might be stored as percentages)
+                // Normalize confidence values
                 const normalized = parsed.map((scan: ScanRecord) => ({
                     ...scan,
                     confidence: scan.confidence > 1 ? scan.confidence / 100 : scan.confidence
                 }));
+                // eslint-disable-next-line
                 setScans(normalized.sort((a: ScanRecord, b: ScanRecord) => b.timestamp - a.timestamp));
                 // Save normalized data back
                 localStorage.setItem('scan_history', JSON.stringify(normalized));
@@ -49,7 +47,7 @@ export default function HistoryPage() {
         } catch (error) {
             console.error('Failed to load scan history:', error);
         }
-    };
+    }, []);
 
     const deleteScan = (id: string) => {
         const updated = scans.filter(scan => scan.id !== id);
@@ -181,6 +179,7 @@ export default function HistoryPage() {
                                 {/* Thumbnail */}
                                 <div className="w-20 h-20 rounded-xl overflow-hidden bg-nature-950/50 flex-shrink-0">
                                     {scan.imageUrl ? (
+                                        // eslint-disable-next-line @next/next/no-img-element
                                         <img
                                             src={scan.imageUrl}
                                             alt="Scan"
@@ -248,6 +247,7 @@ export default function HistoryPage() {
                         {/* Image */}
                         <div className="relative h-64 bg-black">
                             {selectedScan.imageUrl ? (
+                                // eslint-disable-next-line @next/next/no-img-element
                                 <img
                                     src={selectedScan.imageUrl}
                                     alt="Scan detail"

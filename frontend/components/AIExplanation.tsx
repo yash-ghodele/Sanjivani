@@ -96,7 +96,7 @@ export function AIExplanation({ disease, confidence, crop }: AIExplanationProps)
                 ) : (
                     <>
                         <BookOpen className="w-4 h-4 mr-2" />
-                        Explain "Why this diagnosis?"
+                        Explain &quot;Why this diagnosis?&quot;
                     </>
                 )}
             </Button>

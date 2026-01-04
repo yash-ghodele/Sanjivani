@@ -8,7 +8,6 @@ import {
     Smartphone,
     Leaf,
     ChevronDown,
-    ArrowLeft
 } from 'lucide-react';
 import { useState } from 'react';
 import Link from 'next/link';

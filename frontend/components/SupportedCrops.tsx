@@ -38,7 +38,7 @@ export function SupportedCrops() {
         };
 
         fetchCrops();
-    }, []);
+    }, [hasMounted]);
 
     if (!hasMounted) return null;
 

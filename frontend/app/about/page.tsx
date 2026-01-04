@@ -159,7 +159,7 @@ export default function AboutPage() {
     );
 }
 
-function TechCard({ icon, title, desc }: { icon: any, title: string, desc: string }) {
+function TechCard({ icon, title, desc }: { icon: React.ReactNode, title: string, desc: string }) {
     return (
         <div className="p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-nature-500/30 transition-all hover:-translate-y-1">
             <div className="flex items-center gap-3 mb-3 text-nature-400">

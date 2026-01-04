@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { Calendar as CalendarIcon, ArrowLeft, Loader2, Filter } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { CropTimeline } from '@/components/dashboard/CropTimeline';
+import { CropTimeline, CropCalendarData } from '@/components/dashboard/CropTimeline';
 import { useAuth } from "@/hooks/useAuth";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -12,7 +12,7 @@ import { Footer } from "@/components/Footer";
 interface CalendarData {
     version: string;
     description?: string;
-    crops: Record<string, any>;
+    crops: Record<string, CropCalendarData>;
 }
 
 export default function CalendarPage() {
@@ -41,9 +41,9 @@ export default function CalendarPage() {
                 } else {
                     throw new Error(`API returned ${res.status}`);
                 }
-            } catch (err: any) {
+            } catch (err) {
                 console.error('Failed to fetch calendar data:', err);
-                setError(err.message || 'Failed to load calendar data');
+                setError(err instanceof Error ? err.message : 'Failed to load calendar data');
             } finally {
                 setLoading(false);
             }

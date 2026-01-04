@@ -28,8 +28,8 @@ export default function LoginPage() {
                 await loginWithEmail(email, password);
                 window.location.href = "/dashboard";
             }
-        } catch (err: any) {
-            setError(err.message || "Authentication failed. Please check your credentials.");
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Authentication failed. Please check your credentials.");
         }
     };
 

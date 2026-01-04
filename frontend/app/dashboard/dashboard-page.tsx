@@ -33,24 +33,24 @@ export default function Dashboard() {
     const { weather, loading: weatherLoading, error: weatherError, refetch: refetchWeather } = useWeather();
 
     useEffect(() => {
+        const loadScanHistory = () => {
+            try {
+                const history = localStorage.getItem('scan_history');
+                if (history) {
+                    const parsed = JSON.parse(history);
+                    const normalized = parsed.map((scan: ScanRecord) => ({
+                        ...scan,
+                        confidence: scan.confidence > 1 ? scan.confidence / 100 : scan.confidence
+                    }));
+                    setScans(normalized.sort((a: ScanRecord, b: ScanRecord) => b.timestamp - a.timestamp));
+                }
+            } catch (error) {
+                console.error('Failed to load scan history:', error);
+            }
+        };
+
         loadScanHistory();
     }, []);
-
-    const loadScanHistory = () => {
-        try {
-            const history = localStorage.getItem('scan_history');
-            if (history) {
-                const parsed = JSON.parse(history);
-                const normalized = parsed.map((scan: ScanRecord) => ({
-                    ...scan,
-                    confidence: scan.confidence > 1 ? scan.confidence / 100 : scan.confidence
-                }));
-                setScans(normalized.sort((a: ScanRecord, b: ScanRecord) => b.timestamp - a.timestamp));
-            }
-        } catch (error) {
-            console.error('Failed to load scan history:', error);
-        }
-    };
 
     const exportData = () => {
         const dataStr = JSON.stringify(scans, null, 2);

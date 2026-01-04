@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { getOfflineScans, removeOfflineScan } from "@/lib/db";
 import { analyzeCropImage } from "@/services/api";
 
@@ -9,39 +9,18 @@ export function useOfflineSync() {
     const [pendingCount, setPendingCount] = useState(0);
     const [isSyncing, setIsSyncing] = useState(false);
 
-    // Check online status
-    useEffect(() => {
-        setIsOnline(navigator.onLine);
 
-        const handleOnline = () => {
-            setIsOnline(true);
-            syncScans();
-        };
 
-        const handleOffline = () => setIsOnline(false);
-
-        window.addEventListener("online", handleOnline);
-        window.addEventListener("offline", handleOffline);
-
-        // Initial check for pending items
-        checkPending();
-
-        return () => {
-            window.removeEventListener("online", handleOnline);
-            window.removeEventListener("offline", handleOffline);
-        };
-    }, []);
-
-    const checkPending = async () => {
+    const checkPending = useCallback(async () => {
         try {
             const scans = await getOfflineScans();
             setPendingCount(scans.length);
         } catch (e) {
             console.error("Failed to check offline scans", e);
         }
-    };
+    }, []);
 
-    const syncScans = async () => {
+    const syncScans = useCallback(async () => {
         try {
             const scans = await getOfflineScans();
             if (scans.length === 0) return;
@@ -65,7 +44,30 @@ export function useOfflineSync() {
         } finally {
             setIsSyncing(false);
         }
-    };
+    }, [checkPending]);
+
+    // Check online status
+    useEffect(() => {
+        setIsOnline(navigator.onLine);
+
+        const handleOnline = () => {
+            setIsOnline(true);
+            syncScans();
+        };
+
+        const handleOffline = () => setIsOnline(false);
+
+        window.addEventListener("online", handleOnline);
+        window.addEventListener("offline", handleOffline);
+
+        // Initial check for pending items
+        checkPending();
+
+        return () => {
+            window.removeEventListener("online", handleOnline);
+            window.removeEventListener("offline", handleOffline);
+        };
+    }, [syncScans, checkPending]);
 
     return { isOnline, pendingCount, isSyncing, checkPending };
 }

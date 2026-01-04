@@ -3,13 +3,23 @@
 import { Leaf } from "lucide-react";
 import { useEffect, useState } from "react";
 
+interface LeafParticle {
+    id: number;
+    left: string;
+    animationDuration: string;
+    animationDelay: string;
+    size: number;
+    opacity: number;
+    rotation: number;
+}
+
 export function FallingLeavesBackground() {
-    const [leaves, setLeaves] = useState<any[]>([]);
+    const [leaves, setLeaves] = useState<LeafParticle[]>([]);
 
     useEffect(() => {
         // Generate random leaves with higher density for large areas
         const count = 50;
-        const newLeaves = Array.from({ length: count }).map((_, i) => ({
+        const newLeaves: LeafParticle[] = Array.from({ length: count }).map((_, i) => ({
             id: i,
             left: `${Math.random() * 100}%`,
             animationDuration: `${15 + Math.random() * 15}s`, // Slower, more graceful
@@ -18,6 +28,7 @@ export function FallingLeavesBackground() {
             opacity: 0.1 + Math.random() * 0.3,
             rotation: Math.random() * 360,
         }));
+        // eslint-disable-next-line
         setLeaves(newLeaves);
     }, []);
 

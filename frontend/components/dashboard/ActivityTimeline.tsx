@@ -1,6 +1,7 @@
 'use client';
 
 import { Calendar, TrendingUp, Clock, Leaf } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 interface ScanRecord {
@@ -33,8 +34,16 @@ export function ActivityTimeline({ scans }: ActivityTimelineProps) {
         }
     };
 
+    const [now, setNow] = useState(0);
+
+    useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setNow(Date.now());
+        const timer = setInterval(() => setNow(Date.now()), 60000); // Update every minute
+        return () => clearInterval(timer);
+    }, []);
+
     const getRelativeTime = (timestamp: number) => {
-        const now = Date.now();
         const diff = now - timestamp;
         const hours = Math.floor(diff / (1000 * 60 * 60));
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -95,7 +104,7 @@ export function ActivityTimeline({ scans }: ActivityTimelineProps) {
                                     </h4>
                                     <p className="text-sm text-gray-400">{scan.crop}</p>
                                 </div>
-                                <span className="text-xs text-gray-500 whitespace-nowrap">
+                                <span className="text-xs text-gray-500 whitespace-nowrap" suppressHydrationWarning>
                                     {getRelativeTime(scan.timestamp)}
                                 </span>
                             </div>
