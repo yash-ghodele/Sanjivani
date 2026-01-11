@@ -21,12 +21,12 @@ To ensure system reliability and safety, **Sanjivani 2.0** has defined specific 
 **Scenario**: A leaf showing signs of multiple diseases (e.g., Early Blight + Pest Damage).
 *   **Model Limitation**: The current MobileNetV2 architecture is a **multi-class** (single label), not **multi-label** classifier. It will predict the dominant visual feature.
 *   **Safety Net**:
-    *   **Gemini Validation**: The Generative AI layer is prompted to identify "secondary symptoms" in its explanation, providing a textual cross-check against the deterministic single-label prediction.
+    *   **Gemini 1.5 Flash Validation**: The Generative AI layer is prompted to identify "secondary symptoms" in its explanation, providing a textual cross-check against the deterministic single-label prediction.
 
 ## 4. Network / API Failures
 **Scenario**: Backend API is unreachable or Gemini API rate limits are exceeded.
 *   **Backend Fallback**:
-    *   If Gemini fails: The system returns the **Deterministic Diagnosis** only. The "AI Analysis" section in the UI is replaced with a standard "Analysis Unavailable" message, preserving the core functionality.
+    *   If Gemini 1.5 Flash fails: The system returns the **Deterministic Diagnosis** only. The "AI Analysis" section in the UI is replaced with a standard "Analysis Unavailable" message, preserving the core functionality.
 *   **Frontend Fallback**:
     *   Offline Mode: Currently displays a generic connection error. (See Roadmap for IndexedDB caching strategy).
 

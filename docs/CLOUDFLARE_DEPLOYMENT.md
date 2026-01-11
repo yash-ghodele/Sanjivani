@@ -60,7 +60,7 @@ Since Cloudflare blocks Python backends, deploy the `backend/` folder to **Rende
 3.  **Root Directory:** `backend`
 4.  **Build Command:** `pip install -r requirements.txt`
 5.  **Start Command:** `uvicorn main:app --host 0.0.0.0 --port 10000`
-6.  **Environment Variables:** Add `GEMINI_API_KEY`, `FIREBASE_CREDENTIALS` (as JSON string), etc.
+6.  **Environment Variables:** Add `GEMINI_API_KEY` (Gemini 1.5 Flash), `FIREBASE_CREDENTIALS` (as JSON string), etc.
 
 ### Option B: Railway
 1.  New Project > Deploy from GitHub.

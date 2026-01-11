@@ -1,5 +1,9 @@
 # SANJIVANI 2.0 - AI Training Guide
 
+> [!NOTE]
+> This guide focuses on training the **MobileNetV2** CNN for visual disease detection.
+> The **Gemini 1.5 Flash** component is a pre-trained LLM used via API and does not require this training pipeline.
+
 ## 🧠 Model Overview
 
 **Architecture:** MobileNetV2 with Transfer Learning  
@@ -7,6 +11,7 @@
 **Input Size:** 224×224×3  
 **Target Accuracy:** >90%  
 **Target Inference:** <100ms (edge-ready)
+**LLM Component:** Gemini 1.5 Flash (via API) - *No fine-tuning required*
 
 ---
 

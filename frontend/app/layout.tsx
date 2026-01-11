@@ -1,13 +1,11 @@
 import "./globals.css";
 
-import "@fontsource/outfit/400.css";
-import "@fontsource/outfit/700.css";
-import "@fontsource/inter/400.css";
-import "@fontsource/inter/600.css";
-
+import { Inter, Outfit } from "next/font/google";
 import { NotificationProvider } from "@/context/NotificationContext";
 import { I18nProvider } from "@/components/I18nProvider";
 
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
 
 export default function RootLayout({
   children,
@@ -16,7 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="antialiased bg-nature-900 text-white font-sans selection:bg-nature-500/30 selection:text-white" suppressHydrationWarning>
+      <body className={`${inter.variable} ${outfit.variable} antialiased bg-nature-900 text-white font-sans selection:bg-nature-500/30 selection:text-white`} suppressHydrationWarning>
         <NotificationProvider>
           <I18nProvider>
             {/* <ServiceWorkerRegister /> */}
@@ -24,6 +22,7 @@ export default function RootLayout({
           </I18nProvider>
         </NotificationProvider>
       </body>
+
     </html>
   );
 }

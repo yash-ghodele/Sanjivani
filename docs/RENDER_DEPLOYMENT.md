@@ -15,7 +15,7 @@ Since we included a `render.yaml` file in the root of the project, Render can co
 4.  Connect your **Sanjivani-MVP** repository.
 5.  Render will detect the `render.yaml` file and show you a configuration screen.
 6.  **Environment Variables:** You will be asked to provide values for the secrets defined in `render.yaml`:
-    -   `GEMINI_API_KEY`: Your Google Gemini API Key.
+    -   `GEMINI_API_KEY`: Your Google Gemini API Key (Gemini 1.5 Flash).
     -   `FIREBASE_CREDENTIALS`: Your Firebase JSON content (paste the entire JSON content as a single line string).
     -   `OPENWEATHER_API_KEY`: Your OpenWeatherMap Key.
 7.  Click **"Apply"** or **"Create Deploy"**.

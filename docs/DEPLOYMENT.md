@@ -8,6 +8,7 @@ Complete deployment instructions for production environments.
 
 | Platform | Best For | Difficulty | Cost |
 |----------|----------|------------|------|
+| **Cloudflare Pages + Render** | Production deployment | ⭐ Easy | Free tier |
 | **Vercel + Railway** | Quick demo | ⭐ Easy | Free tier |
 | **Netlify + Render** | Portfolio showcase | ⭐ Easy | Free tier |
 | **Docker** | Full control | ⭐⭐ Medium | Any VPS |
@@ -15,7 +16,86 @@ Complete deployment instructions for production environments.
 
 ---
 
-## Option 1: Vercel (Frontend) + Railway (Backend)
+## Option 1: Cloudflare Pages (Frontend) + Render (Backend)
+
+### Prerequisites
+- GitHub account
+- Cloudflare account (free)
+- Render account (free tier available)
+
+### 1. Deploy Backend to Render
+
+**Deploy Steps:**
+1. Go to [render.com](https://render.com)
+2. "New" → "Web Service"
+3. Connect your GitHub repository
+4. Configure settings:
+   - **Name**: `sanjivani-backend`
+   - **Root Directory**: `backend`
+   - **Environment**: Python 3.11
+   - **Build Command**: `pip install -r requirements.txt`
+   - **Start Command**: `uvicorn main:app --host 0.0.0.0 --port $PORT`
+5. Add environment variables:
+   - `PYTHON_VERSION=3.11`
+   - `GEMINI_API_KEY`: Google AI Studio Key (for Gemini 1.5 Flash)
+   - `OPENWEATHER_API_KEY=your_api_key`
+   - `FIREBASE_CREDENTIALS=your_credentials_json`
+6. Deploy! Get URL: `https://sanjivani-backend.onrender.com`
+
+> [!IMPORTANT]
+> **Render Free Tier**: Services spin down after 15 minutes of inactivity. First request after spin-down may take 30-60 seconds.
+
+### 2. Deploy Frontend to Cloudflare Pages
+
+**Configure Next.js for Cloudflare:**
+
+Update `frontend/package.json`:
+```json
+{
+  "scripts": {
+    "build": "next build",
+    "build:cf": "next build && npx @cloudflare/next-on-pages"
+  }
+}
+```
+
+**Deploy Steps:**
+1. Go to [dash.cloudflare.com](https://dash.cloudflare.com)
+2. "Workers & Pages" → "Create Application" → "Pages"
+3. Connect to GitHub and select your repository
+4. Configure build settings:
+   - **Framework preset**: Next.js
+   - **Root directory**: `frontend`
+   - **Build command**: `npm run build`
+   - **Build output directory**: `.next`
+5. Add environment variables:
+   - `NEXT_PUBLIC_API_URL=https://sanjivani-backend.onrender.com`
+   - `NEXT_PUBLIC_FIREBASE_API_KEY=your_key`
+   - `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_domain`
+   - `NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id`
+   - `NODE_VERSION=20`
+6. Deploy! Get URL: `https://sanjivani-2-0.pages.dev`
+
+> [!WARNING]
+> **Git Repository Sync**: Ensure your GitHub repository is up-to-date before deploying. Cloudflare Pages builds from the latest commit, so any local changes not pushed will not be deployed.
+
+### 3. Common Deployment Issues & Solutions
+
+**Issue: Build fails with "Module not found"**
+- Solution: Ensure all dependencies are in `package.json` and committed to git
+- Run `npm install` locally and push `package-lock.json`
+
+**Issue: Environment variables not working**
+- Solution: Make sure variables are prefixed with `NEXT_PUBLIC_` for client-side access
+- Redeploy after adding new variables
+
+**Issue: Backend times out on first request**
+- Solution: Implement a keep-alive ping (see monitoring section below)
+- Consider upgrading to Render paid tier for always-on instances
+
+---
+
+## Option 2: Vercel (Frontend) + Railway (Backend)
 
 ### Prerequisites
 - GitHub account
@@ -250,12 +330,20 @@ FIREBASE_CREDENTIALS_PATH=serviceAccountKey.json
 MODEL_PATH=models/plant_disease_v2.h5
 ```
 
-### Frontend (.env in root)
+### Frontend (.env in frontend/ or .env.local)
 
 ```bash
 # API URL
-VITE_API_URL=http://localhost:8000  # Dev
-VITE_API_URL=https://api.sanjivani.com  # Production
+NEXT_PUBLIC_API_URL=http://localhost:8000  # Dev
+NEXT_PUBLIC_API_URL=https://api.sanjivani.com  # Production
+
+# Firebase Configuration
+NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_auth_domain
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_storage_bucket
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
 ```
 
 ---

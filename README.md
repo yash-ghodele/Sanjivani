@@ -5,7 +5,7 @@ Production-Grade Architecture · Edge-Ready AI · Portfolio Project
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![Next.js](https://img.shields.io/badge/Next.js-App%20Router-black.svg)](https://nextjs.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-16.1.1-black.svg)](https://nextjs.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-green.svg)](https://fastapi.tiangolo.com/)
 
 > **SANJIVANI 2.0** is a from-scratch rebuild of an AI crop disease detection system, designed with production-grade architecture, measurable performance, and real-world constraints in mind.
@@ -214,7 +214,7 @@ pytest tests/ -v
 2. Set Build Command: `pip install -r requirements.txt`
 3. Set Start Command: `uvicorn main:app --host 0.0.0.0 --port $PORT`
 4. Configure **Environment Variables**:
-   * `GEMINI_API_KEY`: Google AI Studio Key
+   * `GEMINI_API_KEY`: Google AI Studio Key (for Gemini 1.5 Flash)
    * `OPENWEATHER_API_KEY`: OpenWeatherMap Key
    * `FIREBASE_CREDENTIALS`: Path to JSON or Base64 encoded JSON
 
@@ -224,7 +224,7 @@ pytest tests/ -v
 
 ### Frontend
 
-* Next.js 15 (App Router)
+* Next.js 16.1.1 (App Router)
 * TypeScript
 * Tailwind CSS
 * Lucide Icons

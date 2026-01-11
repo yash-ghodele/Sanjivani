@@ -10,7 +10,7 @@ import io
 import tensorflow as tf
 from pathlib import Path
 
-from .dataset_config_v2 import CLASS_NAMES, MODEL_CONFIG, get_crop_from_class, get_disease_from_class, get_severity_from_class
+from .dataset_config import CLASS_NAMES, MODEL_CONFIG, get_crop_from_class, get_disease_from_class, get_severity_from_class
 
 
 class InferenceEngine:

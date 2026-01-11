@@ -1,6 +1,6 @@
 # 🖥️ Sanjivani Frontend (v2.0)
 
-A high-performance, accessible web interface for the Sanjivani AI platform, built with **Next.js 15 (App Router)** and **Tailwind CSS**.
+A high-performance, accessible web interface for the Sanjivani AI platform, built with **Next.js 16.1.1 (App Router)** and **Tailwind CSS**.
 
 ## 🎨 Design Philosophy ("Green Space")
 
@@ -40,7 +40,7 @@ NEXT_PUBLIC_OPENWEATHER_API_KEY=your_key_here
 ### 3. Run Development Server
 ```bash
 npm run dev
-# App runs on http://localhost:3000
+# App runs on http://localhost:3005
 ```
 
 ## 📁 Structure
