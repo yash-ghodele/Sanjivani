@@ -9,6 +9,7 @@ import {
     createUserWithEmailAndPassword,
     updateProfile,
     GoogleAuthProvider,
+    GithubAuthProvider,
     signInWithPopup,
     signOut
 } from "firebase/auth";
@@ -58,6 +59,17 @@ export function useAuth() {
         }
     };
 
+    const loginGithub = async () => {
+        try {
+            const provider = new GithubAuthProvider();
+            await signInWithPopup(auth, provider);
+            localStorage.removeItem("demo_user");
+        } catch (error) {
+            console.error("GitHub login failed", error);
+            throw error;
+        }
+    };
+
     const loginWithEmail = async (email: string, password: string) => {
         setLoading(true);
         try {
@@ -103,6 +115,7 @@ export function useAuth() {
         hasMounted,
         loginAnonymous,
         loginGoogle,
+        loginGithub,
         loginWithEmail,
         signupWithEmail,
         logout

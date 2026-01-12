@@ -5,7 +5,7 @@ import { ReactNode } from 'react';
 
 export function FeaturesGrid() {
     return (
-        <section className="py-24 relative" id="features">
+        <section className="py-24 relative" id="how-it-works">{/* Also known as features */}
             <div className="container-padding relative z-10">
                 {/* Problem Statement */}
                 <div className="text-center mb-16 max-w-3xl mx-auto">

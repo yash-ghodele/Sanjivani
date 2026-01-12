@@ -68,38 +68,17 @@ export function CTASection() {
 
                             {/* Social / Extra Links */}
                             <div className="flex gap-4 pt-4">
-                                <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#82ae19] transition-colors cursor-pointer">
+                                <button
+                                    onClick={() => {
+                                        // Scroll to contact form (which is on the same section below)
+                                        const contactForm = document.querySelector('form');
+                                        contactForm?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                    }}
+                                    className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#82ae19] transition-colors"
+                                    aria-label="Jump to contact form"
+                                >
                                     <MessageCircle className="w-5 h-5" />
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Contact Info Cards */}
-                        <div className="space-y-4 pt-8">
-                            <div className="glass-card p-6 rounded-2xl">
-                                <h3 className="text-lg font-display font-bold mb-3 text-gradient-green">
-                                    Contact Information
-                                </h3>
-                                <div className="flex items-start gap-3 text-white/70">
-                                    <Mail className="w-5 h-5 mt-1 text-nature-500" />
-                                    <div>
-                                        <p className="font-medium text-white text-sm">Email</p>
-                                        <a href="mailto:contact@sanjivani.app" className="hover:text-nature-500 transition-colors text-sm">
-                                            contact@sanjivani.app
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="glass-card p-6 rounded-2xl">
-                                <h3 className="text-lg font-display font-bold mb-3 text-gradient-green">
-                                    Support Hours
-                                </h3>
-                                <div className="space-y-1 text-white/70 text-sm">
-                                    <p>Monday - Friday: 9:00 AM - 6:00 PM</p>
-                                    <p>Saturday: 10:00 AM - 4:00 PM</p>
-                                    <p>Sunday: Closed</p>
-                                </div>
+                                </button>
                             </div>
                         </div>
                     </div>
