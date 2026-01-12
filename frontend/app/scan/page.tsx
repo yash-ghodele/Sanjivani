@@ -200,8 +200,14 @@ export default function ScanPage() {
             localStorage.setItem('latest_scan_result', JSON.stringify(data));
             localStorage.setItem('latest_scan_image', image);
 
+            // Create slug from disease name
+            const slug = data.disease.toLowerCase()
+                .replace(/[^\w\s-]/g, '')
+                .replace(/\s+/g, '-')
+                .trim();
+
             // Navigate to results page
-            router.push('/scan/results');
+            router.push(`/disease/${slug}?source=scan&confidence=${data.confidence}&crop=${data.crop}`);
         } catch (err) {
             console.error("Analysis Failed:", err);
             setError("Analysis failed. Please try again.");

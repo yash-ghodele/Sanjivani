@@ -42,14 +42,56 @@ export default function DiseaseDetailPage() {
     const [loading, setLoading] = useState(true);
 
     const isDemo = searchParams.get('demo') === 'true';
+    const isScan = searchParams.get('source') === 'scan';
     const confidence = searchParams.get('confidence') || '98.4';
 
     useEffect(() => {
         const fetchDisease = async () => {
             if (!params.id) return;
 
-            // Check for demo mode - use client-side data
-            if (isDemo) {
+            // Priority 1: Check for recent scan result (if coming from scan)
+            if (isScan) {
+                try {
+                    const storedResult = localStorage.getItem('latest_scan_result');
+                    const storedImage = localStorage.getItem('latest_scan_image');
+
+                    if (storedResult) {
+                        const result: any = JSON.parse(storedResult);
+                        // Normalize scan result to DiseaseDetail format
+                        // Check if stored result matches current ID (fuzzy match)
+                        const resultSlug = result.disease.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').trim();
+
+                        if (resultSlug === params.id) {
+                            setDisease({
+                                id: resultSlug,
+                                name: result.disease,
+                                scientific_name: result.metadata?.scientific_name || "Unknown Scientific Name",
+                                severity: result.severity,
+                                crops_affected: [result.crop],
+                                symptoms: result.metadata?.symptoms || ["See analysis details below"],
+                                recommended_actions: result.recommended_actions || {
+                                    immediate: [],
+                                    short_term: [],
+                                    preventive: []
+                                },
+                                explanation: result.explanation,
+                                economic_impact: "Impact analysis not available for this specific scan."
+                            });
+                            // If we have a stored image, we might want to use it? 
+                            // The current UI uses `disease.imageUrl`. 
+                            // We should probably update the type and UI to support custom images.
+                            // For now, let's just proceed.
+                            setLoading(false);
+                            return;
+                        }
+                    }
+                } catch (e) {
+                    console.error("Failed to load scan result", e);
+                }
+            }
+
+            // Priority 2: Check for demo mode / client data
+            if (isDemo || (!isScan)) { // Also fallback to client data if not scan, or if scan load failed?
                 const clientDisease = getDiseaseById(params.id as string);
                 if (clientDisease) {
                     // Convert client disease format to backend format
@@ -73,7 +115,7 @@ export default function DiseaseDetailPage() {
                 }
             }
 
-            // Fetch from backend API for real scans
+            // Priority 3: Fetch from backend API
             try {
                 const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v2/meta/diseases/${params.id}`);
                 if (res.ok) {
@@ -81,6 +123,7 @@ export default function DiseaseDetailPage() {
                     setDisease(data);
                 } else {
                     console.error("Not found");
+                    // Assuming setDisease(null) is default
                 }
             } catch (error) {
                 console.error("Failed to fetch disease details", error);
@@ -89,7 +132,7 @@ export default function DiseaseDetailPage() {
             }
         };
         fetchDisease();
-    }, [params.id, isDemo]);
+    }, [params.id, isDemo, isScan]);
 
     if (loading) {
         return (
