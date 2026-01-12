@@ -35,3 +35,15 @@ To ensure system reliability and safety, **Sanjivani 2.0** has defined specific 
 *   **Safety Layer**:
     *   **Severity Gating**: High-severity treatments (chemical fungicides) are gated behind strict verification warnings ("Consult an expert before application").
     *   **Disclaimer**: Every result includes a mandatory disclaimer that AI results are advisory only.
+
+## 6. Authentication Failures
+**Scenario**: User unable to complete sign-in via Google or GitHub.
+*   **Common Causes**:
+    *   **Popup Blocked**: Browser settings preventing the OAuth popup.
+    *   **Account Collision**: User tries to sign in with GitHub but already has a Firebase account (via Google) with the same email.
+*   **System Behavior**:
+    *   Popup issues trigger a `auth/popup-closed-by-user` error.
+    *   Collisions trigger `auth/account-exists-with-different-credential`.
+*   **Mitigation**:
+    *   UI displays friendly "Please allow popups" or "Sign in with Google to link accounts" messages.
+    *   Auto-logout on token expiry ensures secure session termination.

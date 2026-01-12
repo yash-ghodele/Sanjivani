@@ -104,10 +104,9 @@ graph TB
 | Rice diseases | 🛠 Planned (v2.1) |
 | Offline scan queue | 🛠 Planned |
 | TFLite edge deployment | 🛠 Planned |
-| Rice diseases | 🛠 Planned (v2.1) |
-| Offline scan queue | 🛠 Planned |
-| TFLite edge deployment | 🛠 Planned |
 | Multilingual UI (EN/HI/MR) | ✅ Implemented |
+| OAuth Authentication (Google/GitHub) | ✅ Implemented |
+| Disease Treatment Pages | ✅ Implemented |
 
 ### 📡 API Design
 
@@ -224,7 +223,7 @@ pytest tests/ -v
 
 ### Frontend
 
-* Next.js 16.1.1 (App Router)
+* Next.js 14.2 (App Router)
 * TypeScript
 * Tailwind CSS
 * Lucide Icons

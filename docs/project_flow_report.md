@@ -2,8 +2,8 @@
 
 **Project Name:** Sanjivani 2.0 (Crop Disease Detection Platform)  
 **Version:** 2.0  
-**Date:** January 4, 2026  
-**Tech Stack:** Next.js 16.1.1, React, TypeScript, Python FastAPI, Firebase Auth  
+**Date:** January 12, 2026  
+**Tech Stack:** Next.js 14.2, React, TypeScript, Python FastAPI, Firebase Auth  
 **Report Location:** `C:\Users\Yash\.gemini\antigravity\brain\7e5b7d3a-6977-46f8-96fe-50d99fc48053\project_flow_report.md`
 
 ---
@@ -35,7 +35,8 @@
    - Dashboard (`/dashboard`) - Main hub
    - Calendar (`/calendar`) - Crop schedules
    - FAQ (`/faq`) - Help section
-   - Scan (`/scan`) - Disease detection
+   - Disease Treatment (`/disease/[id]`) - Diagnosis details
+   - Scan (`/scan`) - Image capture layer
 
 ### 6. **Flow Diagrams**
    - Authentication flow
@@ -131,7 +132,7 @@ Sanjivani 2.0 addresses the critical lack of expert agricultural access for Indi
 ### Tech Stack (Exact)
 
 #### Frontend
-- **Framework:** Next.js 16.1.1 (App Router)
+- **Framework:** Next.js 14.2 (App Router)
 - **Language:** TypeScript
 - **Styling:** Tailwind CSS, Tailwind Merge
 - **UI Architecture:** Radix UI (Primitives), Lucide React (Icons)
@@ -445,9 +446,10 @@ graph TD
     
     ScanPage --> Upload[📤 Upload Image]
     Upload --> AIProcess[🤖 AI Processing]
-    AIProcess --> Results[📋 Show Results]
-    Results --> SaveHistory[💾 Save to History]
-    SaveHistory --> DashContent
+    AIProcess --> SaveHistory[� Save to History]
+    SaveHistory --> Redirect[� Redirect to /disease/:id]
+    Redirect --> Results[📋 Show Treatment Page]
+    Results --> DashContent
     
     CalPage --> ViewCrops[🌾 View Crop Schedules]
     FAQPage --> ReadFAQ[📚 Read Questions]
@@ -481,10 +483,10 @@ graph TD
     F -->|No| G[❌ Show Error & Retry]
     G --> B
     
-    F -->|Yes| H[✅ Show Results]
-    H --> I[📊 Display Confidence]
-    H --> J[💊 Show Treatment]
-    H --> K[🌡️ Show Prevention]
+    F -->|Yes| H[✅ Redirect to Treatment Page]
+    H --> I[📊 Hydrate Data from Storage]
+    I --> J[💊 Show Treatment & Prevention]
+    I --> K[🔗 Enable Sharing]
     
     H --> L[💾 Auto-Save to History]
     L --> M[Option: Return to Dashboard]
