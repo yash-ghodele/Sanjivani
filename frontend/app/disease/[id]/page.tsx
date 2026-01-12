@@ -2,13 +2,13 @@
 
 export const runtime = 'edge';
 
-
 import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Share2, AlertTriangle, Sprout, Info, Calendar } from 'lucide-react';
+import { ArrowLeft, Share2, AlertTriangle, Sprout, Info, Calendar, Camera } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { getDiseaseById } from '@/lib/diseases';
 
 // We'll fetch from the same meta endpoint for now, or a specific detail one.
 // Since we don't have a specific detail endpoint yet, we'll use the meta one and filter client side
@@ -37,15 +37,44 @@ interface DiseaseDetail {
 export default function DiseaseDetailPage() {
     const params = useParams();
     const router = useRouter();
+    const searchParams = useSearchParams();
     const [disease, setDisease] = useState<DiseaseDetail | null>(null);
     const [loading, setLoading] = useState(true);
+
+    const isDemo = searchParams.get('demo') === 'true';
+    const confidence = searchParams.get('confidence') || '98.4';
 
     useEffect(() => {
         const fetchDisease = async () => {
             if (!params.id) return;
+
+            // Check for demo mode - use client-side data
+            if (isDemo) {
+                const clientDisease = getDiseaseById(params.id as string);
+                if (clientDisease) {
+                    // Convert client disease format to backend format
+                    setDisease({
+                        id: clientDisease.id,
+                        name: clientDisease.name,
+                        scientific_name: clientDisease.scientificName,
+                        severity: clientDisease.severity.charAt(0).toUpperCase() + clientDisease.severity.slice(1),
+                        crops_affected: [clientDisease.crop],
+                        symptoms: clientDisease.symptoms,
+                        recommended_actions: {
+                            immediate: clientDisease.treatments.chemical,
+                            short_term: clientDisease.treatments.organic,
+                            preventive: clientDisease.treatments.prevention
+                        },
+                        explanation: clientDisease.description,
+                        economic_impact: `This disease can significantly reduce crop yield if not managed properly. ${clientDisease.severity === 'high' ? 'Severe outbreaks can lead to complete crop loss.' : 'Early detection and treatment can minimize losses.'}`
+                    });
+                    setLoading(false);
+                    return;
+                }
+            }
+
+            // Fetch from backend API for real scans
             try {
-                // Fetch full list and find. Ideally this should be a specific API call.
-                // Let's implement a specific API call in the backend next.
                 const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v2/meta/diseases/${params.id}`);
                 if (res.ok) {
                     const data = await res.json();
@@ -60,7 +89,7 @@ export default function DiseaseDetailPage() {
             }
         };
         fetchDisease();
-    }, [params.id]);
+    }, [params.id, isDemo]);
 
     if (loading) {
         return (
@@ -103,6 +132,11 @@ export default function DiseaseDetailPage() {
                                 )}>
                                     {disease.severity}
                                 </span>
+                                {isDemo && (
+                                    <span className="px-3 py-1 rounded-full text-xs font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                                        DEMO ({confidence}%)
+                                    </span>
+                                )}
                             </div>
                             <p className="text-xl text-gray-400 italic font-serif">{disease.scientific_name}</p>
                         </div>
@@ -112,6 +146,26 @@ export default function DiseaseDetailPage() {
                     </div>
                 </div>
             </div>
+
+            {/* Demo Banner */}
+            {isDemo && (
+                <div className="container mx-auto px-4 mt-6">
+                    <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <Info className="w-5 h-5 text-blue-400" />
+                            <p className="text-sm text-blue-400">
+                                This is a demo result to showcase the treatment information.
+                            </p>
+                        </div>
+                        <Link href="/scan">
+                            <Button variant="outline" size="sm" className="flex items-center gap-2 text-blue-400 border-blue-500/30 hover:bg-blue-500/20">
+                                <Camera className="w-4 h-4" />
+                                Try Real Scan
+                            </Button>
+                        </Link>
+                    </div>
+                </div>
+            )}
 
             <div className="container mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Left Column: Quick Info */}
