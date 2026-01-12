@@ -19,8 +19,8 @@ This document lists all available routes in the Sanjivani 2.0 application.
 | `/dashboard` | **User Dashboard** - Main Hub | `app/dashboard/dashboard-page.tsx` |
 | `/scan` | **Scan** - Disease Detection Camera | `app/scan/page.tsx` |
 | `/disease/[id]` | **Disease Details** - Diagnosis & Treatment | `app/disease/[id]/page.tsx` |
-| `/calendar` | **Crop Calendar** - Scheduling | `app/calendar/page.tsx` |
-| `/history` | **Scan History** - Past diagnoses | `app/history/page.tsx` |
+| `/calendar` | **Crop Calendar** - Scheduling | `app/calendar/page.tsx` (Protected by `AuthGuard`) |
+| `/history` | **Scan History** - Past diagnoses | `app/history/page.tsx` (Protected by `AuthGuard`) |
 
 ## API Routes
 

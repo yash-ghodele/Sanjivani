@@ -42,6 +42,13 @@ To support SSR (Server Side Rendering) on Cloudflare, you need to add the adapte
 3.  Commmit and Push.
 4.  In Cloudflare Dashboard, set **Build Command** to: `npm run pages:build`.
 
+### ⚡ Edge Runtime for API Routes
+Cloudflare Pages runs on the Edge. If you are using API Routes (e.g., `app/api/contact/route.ts`), you **MUST** export the runtime config:
+```typescript
+export const runtime = 'edge';
+```
+*Failure to do this will result in build errors.*
+
 ### Environment Variables
 In Cloudflare Pages Settings > **Environment variables**, add:
 - `NEXT_PUBLIC_API_URL`: The URL of your deployed Backend (e.g., `https://sanjivani-api.railway.app`).
