@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 
 export const runtime = 'edge';
 
-const resendApiKey = process.env.RESEND_API_KEY;
+const resendApiKey = process.env.RESEND_API_KEY; // Ensure this is set in Cloudflare Dashboard
 
 export async function POST(request: Request) {
     if (!resendApiKey) {
