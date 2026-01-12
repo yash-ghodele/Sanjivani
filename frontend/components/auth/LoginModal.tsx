@@ -16,7 +16,6 @@ export function LoginModal({ open }: { open: boolean }) {
                 className="sm:max-w-md bg-[#1a1a18] border-white/10"
                 onPointerDownOutside={(e) => e.preventDefault()}
                 onEscapeKeyDown={(e) => e.preventDefault()}
-                showCloseButton={false}
             >
                 <DialogHeader>
                     <div className="mx-auto w-12 h-12 bg-nature-500/10 rounded-full flex items-center justify-center mb-4 border border-nature-500/20">
