@@ -153,6 +153,24 @@ export default function DiseaseDetailPage() {
         );
     }
 
+    const handleShare = async () => {
+        if (!disease) return;
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: `Sanjivani Diagnosis: ${disease.name}`,
+                    text: `Learn about ${disease.name} (${disease.scientific_name}) and how to treat it.`,
+                    url: window.location.href
+                });
+            } catch (err) {
+                console.log('Share cancelled');
+            }
+        } else {
+            navigator.clipboard.writeText(window.location.href);
+            alert('Link copied to clipboard!');
+        }
+    };
+
     return (
         <div className="min-h-screen bg-black text-white pb-20">
             {/* Header / Hero */}
@@ -183,7 +201,7 @@ export default function DiseaseDetailPage() {
                             </div>
                             <p className="text-xl text-gray-400 italic font-serif">{disease.scientific_name}</p>
                         </div>
-                        <Button variant="ghost" size="icon" className="text-white hover:bg-white/10">
+                        <Button variant="ghost" size="icon" className="text-white hover:bg-white/10" onClick={handleShare}>
                             <Share2 className="w-5 h-5" />
                         </Button>
                     </div>
