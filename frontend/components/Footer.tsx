@@ -103,10 +103,14 @@ export function Footer() {
                     </div>
 
                     {/* Tech Badge */}
-                    <div className="mt-6 text-center">
-                        <p className="text-[10px] text-gray-600 uppercase tracking-wider">
-                            Powered by <span className="text-nature-400">TensorFlow</span> • <span className="text-blue-400">Firebase</span> • <span className="text-purple-400">Gemini AI</span>
-                        </p>
+                    <div className="mt-6 text-center border-t border-white/5 pt-6">
+                        <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-2 font-bold">Powered By Proven Technology</p>
+                        <div className="flex flex-wrap items-center justify-center gap-4 text-xs font-mono text-gray-400">
+                            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-orange-500/50"></span>TensorFlow AI</span>
+                            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-500/50"></span>Firebase Cloud</span>
+                            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-nature-500/50"></span>Offline PWA</span>
+                            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-purple-500/50"></span>Gemini AI</span>
+                        </div>
                     </div>
                 </div>
             </div>

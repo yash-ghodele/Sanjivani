@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { CropTimeline, CropCalendarData } from '@/components/dashboard/CropTimeline';
 import { useAuth } from "@/hooks/useAuth";
+import { AuthGuard } from "@/components/auth/AuthGuard";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 
@@ -56,38 +57,8 @@ export default function CalendarPage() {
 
     if (!hasMounted) return null;
 
-    // Authentication check
-    if (authLoading) {
-        return (
-            <div className="flex h-screen items-center justify-center bg-[#0a0b0a]">
-                <Loader2 className="w-8 h-8 text-nature-500 animate-spin" />
-            </div>
-        );
-    }
-
-    if (!user) {
-        return (
-            <>
-                <Navbar />
-                <div className="flex flex-col items-center justify-center min-h-screen bg-[#0a0b0a] text-white px-4 pt-16">
-                    <CalendarIcon className="w-16 h-16 text-nature-400 mb-4" />
-                    <h1 className="text-2xl font-bold mb-2">Authentication Required</h1>
-                    <p className="text-gray-400 mb-6 text-center">
-                        Please sign in to access the crop calendar
-                    </p>
-                    <Link href="/dashboard">
-                        <Button className="bg-nature-600 hover:bg-nature-500">
-                            Go to Dashboard
-                        </Button>
-                    </Link>
-                </div>
-                <Footer />
-            </>
-        );
-    }
-
     return (
-        <>
+        <AuthGuard>
             <Navbar />
             <div className="min-h-screen bg-[#0a0b0a] text-white pb-20 relative pt-16">
                 {/* Background Pattern */}
@@ -135,7 +106,9 @@ export default function CalendarPage() {
                             <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
                                 <Filter className="w-4 h-4 text-gray-500 mr-2 shrink-0" />
                                 <FilterButton active={filter === 'All'} onClick={() => setFilter('All')}>All Crops</FilterButton>
-                                {cropNames.map(crop => (
+                                <FilterButton active={filter === 'Cotton'} onClick={() => setFilter('Cotton')}>Cotton</FilterButton>
+                                <FilterButton active={filter === 'Soybean'} onClick={() => setFilter('Soybean')}>Soybean</FilterButton>
+                                {cropNames.filter(c => c !== 'Cotton' && c !== 'Soybean').map(crop => (
                                     <FilterButton
                                         key={crop}
                                         active={filter === crop}
@@ -183,7 +156,7 @@ export default function CalendarPage() {
                 </div>
             </div>
             <Footer />
-        </>
+        </AuthGuard>
     );
 }
 

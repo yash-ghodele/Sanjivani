@@ -11,6 +11,7 @@ import { TodaysPriorityBanner } from "@/components/dashboard/TodaysPriorityBanne
 import { ActivityTimeline } from "@/components/dashboard/ActivityTimeline";
 import { WeatherWidget } from "@/components/dashboard/WeatherWidget";
 import { SprayingWidget } from "@/components/dashboard/SprayingWidget";
+import { AuthGuard } from "@/components/auth/AuthGuard";
 
 interface ScanRecord {
     id: string;
@@ -119,48 +120,50 @@ export default function Dashboard() {
     }
 
     return (
-        <div className="flex min-h-screen bg-[#0f110f]">
-            {/* Sidebar */}
-            <DashboardSidebar
-                userName={user?.displayName?.split(' ')[0] || 'Farmer'}
-                totalScans={stats.totalScans}
-                alerts={stats.alerts}
-                onExport={exportData}
-            />
+        <AuthGuard>
+            <div className="flex min-h-screen bg-[#0f110f]">
+                {/* Sidebar */}
+                <DashboardSidebar
+                    userName={user?.displayName?.split(' ')[0] || 'Farmer'}
+                    totalScans={stats.totalScans}
+                    alerts={stats.alerts}
+                    onExport={exportData}
+                />
 
-            {/* Main Content */}
-            <main className="flex-1 overflow-auto">
-                {/* Background */}
-                <div className="fixed inset-0 overflow-hidden pointer-events-none z-0 left-80">
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#0f110f] via-[#0a0b0a] to-[#0f110f]" />
-                    <div className="absolute top-0 right-0 w-96 h-96 bg-nature-600/5 rounded-full blur-3xl" />
-                    <div className="absolute bottom-0 left-1/2 w-96 h-96 bg-blue-600/5 rounded-full blur-3xl" />
-                </div>
-
-                <div className="relative z-10 max-w-7xl mx-auto p-8 space-y-6">
-                    {/* Today's Priority */}
-                    <TodaysPriorityBanner tasks={todaysTasks} />
-
-                    {/* Weather & Spraying Row */}
-                    <div className="grid md:grid-cols-2 gap-6">
-                        <WeatherWidget
-                            weather={weather}
-                            loading={weatherLoading}
-                            error={weatherError}
-                            onRetry={refetchWeather}
-                        />
-                        <SprayingWidget
-                            windSpeed={weather?.wind_speed || 0}
-                            humidity={weather?.humidity || 0}
-                            isRaining={weather?.description?.toLowerCase().includes('rain') || false}
-                            isLoading={weatherLoading}
-                        />
+                {/* Main Content */}
+                <main className="flex-1 overflow-auto">
+                    {/* Background */}
+                    <div className="fixed inset-0 overflow-hidden pointer-events-none z-0 left-80">
+                        <div className="absolute inset-0 bg-gradient-to-br from-[#0f110f] via-[#0a0b0a] to-[#0f110f]" />
+                        <div className="absolute top-0 right-0 w-96 h-96 bg-nature-600/5 rounded-full blur-3xl" />
+                        <div className="absolute bottom-0 left-1/2 w-96 h-96 bg-blue-600/5 rounded-full blur-3xl" />
                     </div>
 
-                    {/* Activity Timeline */}
-                    <ActivityTimeline scans={scans} />
-                </div>
-            </main>
-        </div>
+                    <div className="relative z-10 max-w-7xl mx-auto p-8 space-y-6">
+                        {/* Today's Priority */}
+                        <TodaysPriorityBanner tasks={todaysTasks} />
+
+                        {/* Weather & Spraying Row */}
+                        <div className="grid md:grid-cols-2 gap-6">
+                            <WeatherWidget
+                                weather={weather}
+                                loading={weatherLoading}
+                                error={weatherError}
+                                onRetry={refetchWeather}
+                            />
+                            <SprayingWidget
+                                windSpeed={weather?.wind_speed || 0}
+                                humidity={weather?.humidity || 0}
+                                isRaining={weather?.description?.toLowerCase().includes('rain') || false}
+                                isLoading={weatherLoading}
+                            />
+                        </div>
+
+                        {/* Activity Timeline */}
+                        <ActivityTimeline scans={scans} />
+                    </div>
+                </main>
+            </div>
+        </AuthGuard>
     );
 }
