@@ -1,6 +1,8 @@
 import { Resend } from 'resend';
 import { NextResponse } from 'next/server';
 
+export const runtime = 'edge';
+
 const resendApiKey = process.env.RESEND_API_KEY;
 
 export async function POST(request: Request) {
