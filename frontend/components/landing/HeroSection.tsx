@@ -100,9 +100,11 @@ export function HeroSection() {
                                 </h3>
                                 <p className="text-nature-400 font-mono text-sm mt-1">Confidence: 98.4%</p>
                             </div>
-                            <button className="w-full py-3 rounded-xl bg-nature-600/20 text-nature-400 font-medium hover:bg-nature-600/30 transition-colors flex items-center justify-center gap-2 text-sm border border-nature-500/20">
-                                View Treatment <ArrowRight className="w-4 h-4" />
-                            </button>
+                            <Link href="/scan">
+                                <button className="w-full py-3 rounded-xl bg-nature-600/20 text-nature-400 font-medium hover:bg-nature-600/30 transition-colors flex items-center justify-center gap-2 text-sm border border-nature-500/20">
+                                    View Treatment <ArrowRight className="w-4 h-4" />
+                                </button>
+                            </Link>
                         </div>
                     </div>
                 </div>
